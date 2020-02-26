@@ -211,162 +211,23 @@ rename_leica_gui()
 
 # <a name="moreinfo">4. Conventions</a>
 
-wells are numbered sequentially, left-to-right and top-to-bottom. As an example, this is how wells are numbered in a 96 well plate:
+Wells are numbered sequentially, left-to-right and top-to-bottom. As an example, this is how wells are numbered in a 96 well plate:
 
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0}
-.tg td{font-family:Arial, sans-serif;font-size:14px;text-align:center;vertical-align:middle;padding:5px 2px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;width: 30px;}
-.tg .tg-corner{font-weight:inherit; border: none}
-.tg .tg-chead{font-weight:bold;background:lightgray}
-.tg .tg-rhead{font-weight:bold;background:lightgray}
-.tg .tg-well{font-weight:inherit}
-</style>
-<table class="tg">
-  <tr>
-    <td class="tg-corner"></th>
-    <td class="tg-chead">1</th>
-    <td class="tg-chead">2</th>
-    <td class="tg-chead">3</th>
-    <td class="tg-chead">4</th>
-    <td class="tg-chead">5</th>
-    <td class="tg-chead">6</th>
-    <td class="tg-chead">7</th>
-    <td class="tg-chead">8</th>
-    <td class="tg-chead">9</th>
-    <td class="tg-chead">10</th>
-    <td class="tg-chead">11</th>
-    <td class="tg-chead">12</th>
-  </tr>
-  <tr>
-    <td class="tg-rhead">A</td>
-    <td class="tg-well">1</td>
-    <td class="tg-well">2</td>
-    <td class="tg-well">3</td>
-    <td class="tg-well">4</td>
-    <td class="tg-well">5</td>
-    <td class="tg-well">6</td>
-    <td class="tg-well">7</td>
-    <td class="tg-well">8</td>
-    <td class="tg-well">9</td>
-    <td class="tg-well">10</td>
-    <td class="tg-well">11</td>
-    <td class="tg-well">12</td>
-  </tr>
-  <tr>
-    <td class="tg-rhead">B</td>
-    <td class="tg-well">13</td>
-    <td class="tg-well">14</td>
-    <td class="tg-well">15</td>
-    <td class="tg-well">16</td>
-    <td class="tg-well">17</td>
-    <td class="tg-well">18</td>
-    <td class="tg-well">19</td>
-    <td class="tg-well">20</td>
-    <td class="tg-well">21</td>
-    <td class="tg-well">22</td>
-    <td class="tg-well">23</td>
-    <td class="tg-well">24</td>
-  </tr>
-  <tr>
-    <td class="tg-rhead">C</td>
-    <td class="tg-well">25</td>
-    <td class="tg-well">26</td>
-    <td class="tg-well">27</td>
-    <td class="tg-well">28</td>
-    <td class="tg-well">29</td>
-    <td class="tg-well">30</td>
-    <td class="tg-well">31</td>
-    <td class="tg-well">32</td>
-    <td class="tg-well">33</td>
-    <td class="tg-well">34</td>
-    <td class="tg-well">35</td>
-    <td class="tg-well">36</td>
-  </tr>
-  <tr>
-    <td class="tg-rhead">D</td>
-    <td class="tg-well">37</td>
-    <td class="tg-well">38</td>
-    <td class="tg-well">39</td>
-    <td class="tg-well">40</td>
-    <td class="tg-well">41</td>
-    <td class="tg-well">42</td>
-    <td class="tg-well">43</td>
-    <td class="tg-well">44</td>
-    <td class="tg-well">45</td>
-    <td class="tg-well">46</td>
-    <td class="tg-well">47</td>
-    <td class="tg-well">48</td>
-  </tr>
-  <tr>
-    <td class="tg-rhead">E</td>
-    <td class="tg-well">49</td>
-    <td class="tg-well">50</td>
-    <td class="tg-well">51</td>
-    <td class="tg-well">52</td>
-    <td class="tg-well">53</td>
-    <td class="tg-well">54</td>
-    <td class="tg-well">55</td>
-    <td class="tg-well">56</td>
-    <td class="tg-well">57</td>
-    <td class="tg-well">58</td>
-    <td class="tg-well">59</td>
-    <td class="tg-well">60</td>
-  </tr>
-  <tr>
-    <td class="tg-rhead">F</td>
-    <td class="tg-well">61</td>
-    <td class="tg-well">62</td>
-    <td class="tg-well">63</td>
-    <td class="tg-well">64</td>
-    <td class="tg-well">65</td>
-    <td class="tg-well">66</td>
-    <td class="tg-well">67</td>
-    <td class="tg-well">68</td>
-    <td class="tg-well">69</td>
-    <td class="tg-well">70</td>
-    <td class="tg-well">71</td>
-    <td class="tg-well">72</td>
-  </tr>
-  <tr>
-    <td class="tg-rhead">G</td>
-    <td class="tg-well">73</td>
-    <td class="tg-well">74</td>
-    <td class="tg-well">75</td>
-    <td class="tg-well">76</td>
-    <td class="tg-well">77</td>
-    <td class="tg-well">78</td>
-    <td class="tg-well">79</td>
-    <td class="tg-well">80</td>
-    <td class="tg-well">81</td>
-    <td class="tg-well">82</td>
-    <td class="tg-well">83</td>
-    <td class="tg-well">84</td>
-  </tr>
-  <tr>
-    <td class="tg-rhead">H</td>
-    <td class="tg-well">85</td>
-    <td class="tg-well">86</td>
-    <td class="tg-well">84</td>
-    <td class="tg-well">88</td>
-    <td class="tg-well">89</td>
-    <td class="tg-well">90</td>
-    <td class="tg-well">91</td>
-    <td class="tg-well">92</td>
-    <td class="tg-well">93</td>
-    <td class="tg-well">94</td>
-    <td class="tg-well">95</td>
-    <td class="tg-well">96</td>
-  </tr>
-</table>
+|   	|  **1** 	|  **2** 	|  **3** 	|  **4** 	|  **5** 	|  **6** 	|  **7** 	|  **8** 	|  **9** 	| **10** 	| **11** 	| **12** 	|
+|:-:	|:--:	|:--:	|:--:	|:--:	|:--:	|:--:	|:--:	|:--:	|:--:	|:--:	|:--:	|:--:	|
+| **A** 	|  1 	|  2 	|  3 	|  4 	|  5 	|  6 	|  7 	|  8 	|  9 	| 10 	| 11 	| 12 	|
+| **B** 	| 13 	| 14 	| 15 	| 16 	| 17 	| 18 	| 19 	| 20 	| 21 	| 22 	| 23 	| 24 	|
+| **C** 	| 25 	| 26 	| 27 	| 28 	| 29 	| 30 	| 31 	| 32 	| 33 	| 34 	| 35 	| 36 	|
+| **D** 	| 37 	| 38 	| 39 	| 40 	| 41 	| 42 	| 43 	| 44 	| 45 	| 46 	| 47 	| 48 	|
+| **E** 	| 49 	| 50 	| 51 	| 52 	| 53 	| 54 	| 55 	| 56 	| 57 	| 58 	| 59 	| 60 	|
+| **F** 	| 61 	| 62 	| 63 	| 64 	| 65 	| 66 	| 67 	| 68 	| 69 	| 70 	| 71 	| 72 	|
+| **G** 	| 73 	| 74 	| 75 	| 76 	| 77 	| 78 	| 79 	| 80 	| 81 	| 82 	| 83 	| 84 	|
+| **H** 	| 85 	| 86 	| 87 	| 88 	| 89 	| 90 	| 91 	| 92 	| 93 	| 94 	| 95 	| 96 	|
 
 
 The same convention applies if multiple imaging fields have been acquired inside each well, according to a sub-position matrix. This example shows the numbering of 5×5 imaging fields inside a well:
 
-<style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0}
-.tg td{font-family:Arial, sans-serif;font-size:14px;text-align:center;vertical-align:middle;padding:12px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;width: 30px;}
-.tg .tg-pos{font-weight:inherit}
-</style>
+
 <table class="tg">
   <tr>
     <td class="tg-pos">P001</td>
