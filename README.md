@@ -1,6 +1,28 @@
 # htmrenamer
 *Systematic renaming of high throughput microscopy images*
 
+
+
+
+
+## Table of Contents
+* [1. Overview](#overview)
+* [2. Setup](#installation)
+* [3. Generating well descriptors](#descriptors)
+* [4. File renaming](#renaming)
+    * [4.1. Zeiss](#renaming-zeiss)
+    * [4.2. Leica](#renaming-leica)
+* [5. Conventions](#moreinfo)
+* [6. Troubleshooting](#troubleshooting)
+* [7. Citation](#citation)
+
+
+
+
+
+## <a name="overview">1. Overview</a>
+
+
 High throughput microscopy systems output raw image files with systematic names typically indicating the plate name, well identity, time number, z slice number and other relevant metadata. The file name structure depends on the manufacturer:
 
 * **Zeiss:** `demoplate_01_s01t1.tif`
@@ -38,19 +60,11 @@ The [htmrenamer manual](https://github.com/hmbotelho/htmrenamer/blob/master/htmr
 
 
 
-# Workflow
-* [1. Installation](#installation)
-* [2. Generating well descriptors](#descriptors)
-* [3. File renaming](#renaming)
-    * [3.1. Zeiss](#renaming-zeiss)
-    * [3.2. Leica](#renaming-leica)
-* [4. Conventions](#moreinfo)
-* [5. Troubleshooting](#troubleshooting)
 
 
-# <a name="installation">1. Installation</a>
+## <a name="installation">2. Setup</a>
 
-The installation procedure makes the htmrenamer package available on your computer. This is only required when using the package for the first time.
+The setup procedure installs the htmrenamer package in your computer. This is only required when using the package for the first time.
 Make sure to download the software matching your computer's operating system (Windows, macOS) and system architecture (32 bit, 64 bit).
 
 1. **Install Java:** [download](https://www.oracle.com/technetwork/java/javase/downloads/) and install the Oracle JDK.
@@ -73,7 +87,10 @@ install_github("hmbotelho/htmrenamer")
 Hit enter/return after each line to execute the command.
 
 
-# <a name="descriptors">2. Generating well descriptors</a>
+
+
+## <a name="descriptors">3. Generating well descriptors</a>
+
 
 Renaming of raw microscopy images requires that the experimental treatment of each well are described in a plain text microscope “infile”. Common treatments are:
 
@@ -117,12 +134,15 @@ The infile will be displayed on the R console and saved to the working directory
 
 
 
-# <a name="renaming">3. File renaming</a>
+
+
+## <a name="renaming">4. File renaming</a>
 
 The file renaming tools take as inputs raw microscopy images and the microscope infile, to generate a common file/folder structure, regardless of the microscope manufacturer. htmrenamer currently supports the renaming of images acquired with Zeiss and Leica high-throughput microscopes.
 
 
-## <a name="renaming-zeiss">3.1. Zeiss</a>
+
+### <a name="renaming-zeiss">4.1. Zeiss</a>
 
 Images acquired in the CZI format must first be exported as TIF files (in Zen Blue edition: `File > Export/Import > Export > TIFF`).
 Sample exported images are available in the [sample data folder](/sample_data/Zeiss/confocal_raw)
@@ -141,7 +161,7 @@ rename_zeiss_gui()
 
 3. The renaming tool window will appear:
 
-![Zeiss File Renamer Tool](./img/renamer_zeiss.png)
+<p align="center"><img src="./img/renamer_zeiss.png"></p>
 
 
 4. Specify the following details of the experiment:
@@ -152,9 +172,11 @@ rename_zeiss_gui()
     * **Number of columns:** Number of columns in the assay plate, regardless of how many wells were imaged. [96 well plates: 12][384 well plates: 24].
 
 
-5. Click the `Start renaming` button to start the file renaming process.
-	**Note 1:** This is a copy-and-duplicate process.
-	**Note 2:** The name of the infile `txt` file should be meaningful as this will be propagated to the renamed files and folders.
+5. Click the `Start renaming` button to start the file renaming process.  
+
+	**Note 1:** This is a copy-and-duplicate process.  
+	
+	**Note 2:** The name of the infile `txt` file should be meaningful as this will be propagated to the renamed files and folders.  
 
 
 6. Progress will be shown in the log text box as well as in the R console.
@@ -162,11 +184,11 @@ rename_zeiss_gui()
 
 7. The renaming process will create a folder structure which with renamed files like this one:
 
-![renamed files](./img/renamer_files.png)
+<p align="center"><img src="./img/renamer_files.png"></p>
 
 
 
-## <a name="renaming-leica">3.2. Leica</a>
+### <a name="renaming-leica">4.2. Leica</a>
 
 Currently, htmrenamer only supports images generated with Leica MatrixScreener and exported as OME-TIFF.
 Sample exported images are available in the [sample data folder](/sample_data/Leica/confocal_raw)
@@ -185,7 +207,7 @@ rename_leica_gui()
 
 3. The renaming tool window will appear:
 
-![Leica File Renamer Tool](./img/renamer_leica.png)
+<p align="center"><img src="./img/renamer_leica.png"></p>
 
 
 4. Specify the following details of the experiment:
@@ -206,10 +228,13 @@ rename_leica_gui()
 
 7. The renaming process will create a folder structure which with renamed files like this one:
 
-![renamed files](./img/renamer_files.png)
+<p align="center"><img src="./img/renamer_files.png"></p>
 
 
-# <a name="moreinfo">4. Conventions</a>
+
+
+
+## <a name="moreinfo">5. Conventions</a>
 
 Wells are numbered sequentially, left-to-right and top-to-bottom. As an example, this is how wells are numbered in a 96 well plate:
 
@@ -309,7 +334,10 @@ The Leica renaming tool will ignore unused wells and sub-positions, but keep the
 </table>
 
 
-# <a name="troubleshooting">5. Troubleshooting</a>
+
+
+
+## <a name="troubleshooting">6. Troubleshooting</a>
 
 This section contains fixes for the most common problems one may find when installing or running htmrenamer.
 
@@ -389,3 +417,10 @@ sudo rm -rf /Library/Preferences/com.oracle.java.Helper-Tool.plist
 Any given JDK version can be downloaded from the [Oracle Java Archive](https://www.oracle.com/technetwork/java/javase/archive-139210.html). Select and install the one that matches your operating system, system architecture (32/64 bit) and the version mentioned in the error message.
 
 You should now be able to run htmrenamer.
+
+
+
+
+
+## <a name="citation">7. Citation</a>
+Hagemeijer *et al* (2020) **An open-source high-content analysis workflow for CFTR function measurements using the forskolin-induced swelling assay** *submitted*
