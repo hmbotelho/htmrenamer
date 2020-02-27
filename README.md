@@ -218,9 +218,11 @@ rename_leica_gui()
     * **Lossless compression:** Performs lossless image compression using the “deflate” algorithm. Typically, this produces a file size ~20% lower than LZW-compressed images but removes all metadata (e.g. pixel size calibration).
 
 
-5. Click the `Start renaming` button to start the file renaming process. This is a copy-and-duplicate process.
-	**Note 1:** This is a copy-and-duplicate process.
-	**Note 2:** The name of the infile `txt` file should be meaningful as this will be propagated to the renamed files and folders.
+5. Click the `Start renaming` button to start the file renaming process. This is a copy-and-duplicate process.  
+
+	**Note 1:** This is a copy-and-duplicate process.  
+	
+	**Note 2:** The name of the infile `txt` file should be meaningful as this will be propagated to the renamed files and folders.  
 	
 
 6. Progress will be shown in the log text box as well as in the R console.
