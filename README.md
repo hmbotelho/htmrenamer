@@ -344,7 +344,7 @@ The Leica renaming tool will ignore unused wells and sub-positions, but keep the
 This section contains fixes for the most common problems one may find when installing or running htmrenamer.
 
 
-**R freezes (masOS users)**  
+**R freezes (macOS users)**  
 If XQuartz is not installed, R will freeze when running the `rename_leica_gui()` or `rename_zeiss_gui()` functions.
 XQuartz can be downloaded from [this link](https://www.xquartz.org/).
 ___
@@ -365,7 +365,55 @@ library(htmrenamer)
 ___
 
 
-**Java error**  
+**rJava error 1**  
+If R thows the following (or similar) error message when loading htmrenamer or one of its functions
+
+```
+Error: package or namespace load failed for ‘xlsx’:
+ .onLoad failed in loadNamespace() for 'rJava', details:
+  call: fun(libname, pkgname)
+  error: JAVA_HOME cannot be determined from the Registry
+```
+
+it means that the JDK is not installed. 
+Download the JDK from [here](https://www.oracle.com/java/technologies/javase-downloads.html). Choose the version that matches your operating system and system architecture (32 bit, 64 bit).
+___
+
+
+**rJava error 2**  
+If R thows the following (or similar) error message when loading htmrenamer or one of its functions
+
+```
+Error: package or namespace load failed for ‘xlsx’:
+ .onLoad failed in loadNamespace() for 'xlsx', details:
+  call: fun(libname, pkgname)
+  error: Your java version is 14.  Need 1.5.0 or higher.
+```
+
+it means that there is an incompatibility between the JDK version intalled in your computer and the `xlsx` R package. 
+To install compatible versions, do the following:
+
+1. Uninstall the Java Development Kit (instructions for [Windows](https://www.java.com/en/download/help/uninstall_java.xml) and [macOS](https://www.java.com/en/download/help/mac_uninstall_java.xml))
+    
+2. Download and install [JDK version 13.0.1](https://www.oracle.com/java/technologies/javase/jdk13-archive-downloads.html). Choose the version that matches your operating system and system architecture (32 bit, 64 bit).
+    
+3. Open R and uninstall `xlsx`:
+    ```
+    remove.packages("xlsx")
+    ```
+    
+4. Install `xlsx`version 0.6.3:
+    ```
+    install.packages("devtools")
+    library(devtools)
+    install_version("xlsx", version = "0.6.3")
+    ```
+    
+It should now be possible to run htmrenamer.
+____
+
+
+**rJava error 3**  
 If R thows the following (or similar) error message when loading htmrenamer or one of its functions
 
 ```
