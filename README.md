@@ -76,15 +76,14 @@ Make sure to download the software matching your computer's operating system (Wi
 3. **Install R:** Download R from the [CRAN website](https://cran.r-project.org/). Then, install and run it.
 
 
-4. **Install the htmrenamer package:** use the R command line to install the [devtools](https://github.com/r-lib/devtools) package by typing
+4. **Install the htmrenamer package:** download the [latest htmrenamer release](https://github.com/hmbotelho/htmrenamer/releases) (`htmrenamer_xxx.tar.gz`). Install it using he menu bar (`Packages > Install package(s) from local files...`) or via the R command line:
 
 ```
-install.packages("devtools")
-library(devtools)
-install_github("hmbotelho/htmrenamer")
+install.packages("path_to_file/htmrenamer_xxx.tar.gz", repo=NULL)
 ```
 
 Hit enter/return after each line to execute the command.
+
 
 
 
@@ -124,7 +123,7 @@ Columns are separated by a double dash (`--`) and represent:
 To generate a blank infile corresponding to a 96 well plate (8 × 12 wells), type the following commands in the R command line:
 
 ```
-library("htmrenamer")
+library(htmrenamer)
 newinfile.char(8, 12, show = TRUE, saveto = "myinfile.txt")
 ```
 
