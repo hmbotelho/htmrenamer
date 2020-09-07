@@ -422,11 +422,14 @@ rename_leica <- function(sourcefolder, targetfolder, infilepath, compress = FALS
             # Create data frame "ChannelDescriptors". Each column is one imaging channel
             ChannelDescriptors <- xpathSApply(AllJobsNode[[i]], "LDM_Block/ATLConfocalSettingDefinition/DetectorList/Detector", xmlAttrs)
             ChannelDescriptors <- ChannelDescriptors[sapply(ChannelDescriptors, function(x) x["IsActive"] == "1")]
-            # ChannelDescriptors <- as.data.frame(ChannelDescriptors, stringsAsFactors = FALSE)
             ChannelDescriptors <- if(class(ChannelDescriptors) == "list"){
-                do.call(rbind,
-                        lapply(ChannelDescriptors, as.data.frame, stringsAsFactors = FALSE)
-                )
+                allheaders <- lapply(ChannelDescriptors, names)
+                commonheaders <- Reduce(intersect, allheaders)
+                ChannelDescriptors2 <- lapply(ChannelDescriptors, function(x){
+                    x <- x[commonheaders]
+                    as.data.frame(x)
+                })
+                do.call(cbind, ChannelDescriptors2)
             } else{
                 as.data.frame(ChannelDescriptors, stringsAsFactors = FALSE)
             }
