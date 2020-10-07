@@ -127,7 +127,8 @@ matrix_snake <- function(x, nrow, ncol, byrow = FALSE){
 #' @export
 rename_zeiss_gui <- function(){
 
-    setup.dependency("gWidgets2tcltk")
+    # library(gWidgets2tcltk)
+    # library(utils)
 
     #####################################################################################################
     # Initialize variables
@@ -144,98 +145,98 @@ rename_zeiss_gui <- function(){
     #####################################################################################################
 
     # Launch dialog box
-    mainWindow <- gwindow("Zeiss File Renamer Tool")
+    mainWindow <- gWidgets2::gwindow(paste0("Zeiss File Renamer Tool    -    htmrenamer v", utils::packageVersion("htmrenamer")))
     size(mainWindow) <- c(300,660)
 
     # Define groups
-    groupMainWindow    <- ggroup(spacing = 0, horizontal = FALSE, container = mainWindow)
-    groupTopButtons    <- ggroup(spacing = 1, container = groupMainWindow)
-    groupWellLayout    <- ggroup(spacing = 1, horizontal = FALSE, container = groupMainWindow)
-    groupWellLayoutR   <- ggroup(spacing = 1, container = groupWellLayout)
-    groupWellLayoutC   <- ggroup(spacing = 1, container = groupWellLayout)
-    groupLabels1       <- ggroup(spacing = 1, container = groupMainWindow)
-    groupLabels2       <- ggroup(spacing = 1, container = groupMainWindow)
-    groupLabels3       <- ggroup(spacing = 1, container = groupMainWindow)
-    groupLabels4       <- ggroup(spacing = 1, container = groupMainWindow)
-    groupLog           <- ggroup(horizontal = FALSE, container = groupMainWindow)
-    groupProgressBar   <- ggroup(spacing = 1, horizontal = FALSE, container = groupMainWindow)
-    groupBottomButtons <- ggroup(horizontal = FALSE, container = groupMainWindow)
+    groupMainWindow    <- gWidgets2::ggroup(spacing = 0, horizontal = FALSE, container = mainWindow)
+    groupTopButtons    <- gWidgets2::ggroup(spacing = 1, container = groupMainWindow)
+    groupWellLayout    <- gWidgets2::ggroup(spacing = 1, horizontal = FALSE, container = groupMainWindow)
+    groupWellLayoutR   <- gWidgets2::ggroup(spacing = 1, container = groupWellLayout)
+    groupWellLayoutC   <- gWidgets2::ggroup(spacing = 1, container = groupWellLayout)
+    groupLabels1       <- gWidgets2::ggroup(spacing = 1, container = groupMainWindow)
+    groupLabels2       <- gWidgets2::ggroup(spacing = 1, container = groupMainWindow)
+    groupLabels3       <- gWidgets2::ggroup(spacing = 1, container = groupMainWindow)
+    groupLabels4       <- gWidgets2::ggroup(spacing = 1, container = groupMainWindow)
+    groupLog           <- gWidgets2::ggroup(horizontal = FALSE, container = groupMainWindow)
+    groupProgressBar   <- gWidgets2::ggroup(spacing = 1, horizontal = FALSE, container = groupMainWindow)
+    groupBottomButtons <- gWidgets2::ggroup(horizontal = FALSE, container = groupMainWindow)
 
 
     # Generate top buttons
-    gbutton("Select Input Folder", container = groupTopButtons, handler = function(h,...) {
+    gWidgets2::gbutton("Select Input Folder", container = groupTopButtons, handler = function(h,...) {
         sourcefolder <<- if(Sys.info()["sysname"] == "Windows"){
-                            choose.dir(default = getwd(), caption = "Where are the raw images?")
+                            utils::choose.dir(default = getwd(), caption = "Where are the raw images?")
                          } else{
                             tcltk::tk_choose.dir(default = getwd(), caption = "Where are the raw images?")
                          }
         gWidgets2::svalue(labelsourcefolder) <- sourcefolder
         print(paste0("Input folder: ", sourcefolder))
     })
-    gbutton("Select Output Folder", container = groupTopButtons, handler = function(h,...) {
+    gWidgets2::gbutton("Select Output Folder", container = groupTopButtons, handler = function(h,...) {
         targetfolder <<- if(Sys.info()["sysname"] == "Windows"){
-            choose.dir(default = getwd(), caption = "Where do you want to save the images?")
+            utils::choose.dir(default = getwd(), caption = "Where do you want to save the images?")
         } else{
             tcltk::tk_choose.dir(default = getwd(), caption = "Where do you want to save the images?")
         }
         gWidgets2::svalue(labeltargetfolder) <- targetfolder
         print(paste0("Output folder: ", targetfolder))
     })
-    gbutton("Select Microscope Infile", container = groupTopButtons, handler = function(h,...) {
+    gWidgets2::gbutton("Select Microscope Infile", container = groupTopButtons, handler = function(h,...) {
         infile <<- if(Sys.info()["sysname"] == "Windows"){
-                        choose.files(default = "", caption = "Select the in-file", multi = FALSE)
+                        utils::choose.files(default = "", caption = "Select the in-file", multi = FALSE)
                    } else{
                         tcltk::tk_choose.files(default = "", caption = "Select the in-file", multi = FALSE)
                    }
         gWidgets2::svalue(labelInFile) <- infile
         print(paste0("In-file: ", infile))
     })
-    addSpace(groupTopButtons, 3)
+    gWidgets2::addSpace(groupTopButtons, 3)
 
 
     # Generate spin buttons
-    addSpace(groupWellLayout, 3)
-    glabel("Number of Rows:        ", container = groupWellLayoutR)
-    numrow <- gspinbutton(from = 1,to = 32, by = 1, value = 8, container = groupWellLayoutR, handler = function(h, ...){
+    gWidgets2::addSpace(groupWellLayout, 3)
+    gWidgets2::glabel("Number of Rows:        ", container = groupWellLayoutR)
+    numrow <- gWidgets2::gspinbutton(from = 1,to = 32, by = 1, value = 8, container = groupWellLayoutR, handler = function(h, ...){
         plate <<- paste0(gWidgets2::svalue(numrow) * gWidgets2::svalue(numcol), " well")
         gWidgets2::svalue(labelPlateType) <- plate
     })
-    glabel("Number of Columns: ", container = groupWellLayoutC)
-    numcol <- gspinbutton(from = 1,to = 48, by = 1, value = 12, container = groupWellLayoutC, handler = function(h, ...){
+    gWidgets2::glabel("Number of Columns: ", container = groupWellLayoutC)
+    numcol <- gWidgets2::gspinbutton(from = 1,to = 48, by = 1, value = 12, container = groupWellLayoutC, handler = function(h, ...){
         plate <<- paste0(gWidgets2::svalue(numrow) * gWidgets2::svalue(numcol), " well")
         gWidgets2::svalue(labelPlateType) <- plate
     })
 
 
     # Generate text labels (folder & filenames)
-    addSpace(groupLabels1, 3)
-    glabel("Input Folder:   ", container = groupLabels1)
-    labelsourcefolder <- glabel(sourcefolder, container = groupLabels1)
-    addSpace(groupLabels1, 3)
-    addSpace(groupLabels2, 3)
-    glabel("Output Folder:", container = groupLabels2)
-    labeltargetfolder <- glabel(targetfolder, container = groupLabels2)
-    addSpace(groupLabels2, 3)
-    addSpace(groupLabels3, 3)
-    glabel("Mic-In File:      ", container = groupLabels3)
-    labelInFile <- glabel(infile, container = groupLabels3)
-    addSpace(groupLabels3, 3)
-    addSpace(groupLabels4, 3)
-    glabel("Plate type:       ", container = groupLabels4)
-    labelPlateType <- glabel(plate, container = groupLabels4)
-    addSpace(groupLabels4, 3)
+    gWidgets2::addSpace(groupLabels1, 3)
+    gWidgets2::glabel("Input Folder:   ", container = groupLabels1)
+    labelsourcefolder <- gWidgets2::glabel(sourcefolder, container = groupLabels1)
+    gWidgets2::addSpace(groupLabels1, 3)
+    gWidgets2::addSpace(groupLabels2, 3)
+    gWidgets2::glabel("Output Folder:", container = groupLabels2)
+    labeltargetfolder <- gWidgets2::glabel(targetfolder, container = groupLabels2)
+    gWidgets2::addSpace(groupLabels2, 3)
+    gWidgets2::addSpace(groupLabels3, 3)
+    gWidgets2::glabel("Mic-In File:      ", container = groupLabels3)
+    labelInFile <- gWidgets2::glabel(infile, container = groupLabels3)
+    gWidgets2::addSpace(groupLabels3, 3)
+    gWidgets2::addSpace(groupLabels4, 3)
+    gWidgets2::glabel("Plate type:       ", container = groupLabels4)
+    labelPlateType <- gWidgets2::glabel(plate, container = groupLabels4)
+    gWidgets2::addSpace(groupLabels4, 3)
 
 
     # Generate log window
-    logWindow <<- gtext("Zeiss file renamer tool\nMay 2019\nHugo Botelho\nhmbotelho@fc.ul.pt\n\nTo use this tool you first need to export your *.czi files using 'File Export > TIFF' in the Zeiss Zen program.\n\nA typical exported file has a name like 'image_s01t1.tif'\n\n", container = groupLog, width = 100, height = 300)
+    logWindow <<- gWidgets2::gtext("September 2020\nHugo Botelho\nhmbotelho@fc.ul.pt\n\nTo use this tool you first need to export your *.czi files using 'File Export > TIFF' in the Zeiss Zen program.\n\nA typical exported file has a name like 'image_s01t1.tif'\n\n", container = groupLog, width = 100, height = 300)
 
 
     # Generate progress bar
-    ProgressBar <<- gprogressbar(value=0, container = groupProgressBar)
+    ProgressBar <<- gWidgets2::gprogressbar(value=0, container = groupProgressBar)
 
 
     # This button triggers all file-related actions
-    gbutton("Start renaming", container = groupBottomButtons, handler = function(h,...) {
+    gWidgets2::gbutton("Start renaming", container = groupBottomButtons, handler = function(h,...) {
         if (sourcefolder == "<not specified>"){
             gWidgets2::insert(logWindow,"No input folder!\n")
         } else if (targetfolder == "<not specified>"){
@@ -253,6 +254,8 @@ rename_zeiss_gui <- function(){
                          REGEXvalidimages = "^.*?s.*?t.*?\\.tif$",
                          REGEXscenenum    = "^.*/.*_s(.*)t.*\\.tif$",
                          REGEXtimenum     = "^.*/.*_s.*t(.*)\\.tif$",
+                         printMessages    = TRUE, 
+                         printFiles       = TRUE,
                          printToGUI       = TRUE,
                          move             = FALSE)
 
@@ -283,6 +286,8 @@ rename_zeiss_gui <- function(){
 #' @param REGEXvalidimages character, regular expression matching all files which should be renamed
 #' @param REGEXscenenum character, regular expression capturing (\code{(\1)}) the scene number (i.e. well number)
 #' @param REGEXtimenum character, regular expression capturing (\code{(\1)}) the time number in a time lapse
+#' @param printMessages, logical, print messages in the console?
+#' @param printFiles, logical, print file-by-file progress in the console?
 #' @param printToGUI logical, print messages to the renamer GUI?
 #' @param move logical, move (rather than copy) raw images?
 #'
@@ -294,7 +299,7 @@ rename_zeiss_gui <- function(){
 #' \code{\link{rename_leica_gui}} is the function which implements the actual renaming algorithm.\cr
 #'
 #' @export
-rename_zeiss <- function(sourcefolder, targetfolder, infilepath, numrow, numcol, REGEXvalidimages = "^.*?s.*?t.*?\\.tif$", REGEXscenenum = "^.*/.*_s(.*)t.*\\.tif$", REGEXtimenum = "^.*/.*_s.*t(.*)\\.tif$", printToGUI = FALSE, move = FALSE){
+rename_zeiss <- function(sourcefolder, targetfolder, infilepath, numrow, numcol, REGEXvalidimages = "^.*?s.*?t.*?\\.tif$", REGEXscenenum = "^.*/.*_s(.*)t.*\\.tif$", REGEXtimenum = "^.*/.*_s.*t(.*)\\.tif$", printMessages = TRUE, printFiles = TRUE, printToGUI = FALSE, move = FALSE){
 
     # read Infile
     infilename   <- gsub("(.+?)\\.[^\\.]+$", "\\1", basename(infilepath))
@@ -364,7 +369,7 @@ rename_zeiss <- function(sourcefolder, targetfolder, infilepath, numrow, numcol,
     if(!is.null(nrow(files.no.annotation))){
         msg <- paste0("Missing annotation for ", length(files.no.annotation), " files. Consider checking the number of rows and columns, as well as the infile. These are the files affected: ", paste(files.no.annotation, collapse = " ; "))
 
-        if(printToGUI) gWidgets2::insert(logWindow, msg)
+        echo(msg, printToGUI = printToGUI, printToConsole = printMessages)
         stop(msg)
     }
 
@@ -399,23 +404,22 @@ rename_zeiss <- function(sourcefolder, targetfolder, infilepath, numrow, numcol,
             # Make sure the file has been copied correctly
             while(file.size(OldFile) != file.size(NewFile)){
                 file.copy(OldFile, NewFile, overwrite = TRUE)
-                print(paste0(progressTxt, "   Copy error! Retry copy: ", NewFile))
-                if(printToGUI) gWidgets2::insert(logWindow, paste0("Copy error! Retry copy: ", NewFile))
+                msg <- paste0(progressTxt, "   Copy error! Retry copy: ", NewFile)
+                echo(msg, printToGUI = printToGUI, printToConsole = printMessages)
             }
 
             # Delete OldFile, if required
             if(move) file.remove(OldFile)
 
-            print(paste0(progressTxt, "   Renamed file: ", NewFile))
+            msg <- paste0(progressTxt, "   Renamed file: ", NewFile)
+            echo(msg, printToGUI = printToGUI, printToConsole = printFiles)
             cat(paste0(OldFile, "|", NewFile), file= LogFile, sep="\n", append=TRUE)
-            if(printToGUI){
-                gWidgets2::insert(logWindow, paste0(progressTxt, "   Renamed file: ", NewFile))
-                gWidgets2::svalue(ProgressBar) <- progress
-            }
+            if(printToGUI) gWidgets2::svalue(ProgressBar) <- progress
 
         } else{
-            warning(paste0("File does not exist: ", OldFile))
-            gWidgets2::insert(logWindow, paste0("File does not exist: ", OldFile, "\n"))
+            msg <- paste0("File does not exist: ", OldFile, "\n")
+            warning(msg)
+            echo(msg, printToGUI = printToGUI, printToConsole = printMessages)
             if(printToGUI) gWidgets2::svalue(ProgressBar) <<- progress
         }
 

@@ -4,8 +4,7 @@
 \alias{newinfile.char}
 \title{Create empty infile (character vector)}
 \usage{
-newinfile.char(numrow = 8, numcol = 12, show = FALSE,
-  saveto = character())
+newinfile.char(numrow = 8, numcol = 12, show = FALSE, saveto = character())
 }
 \arguments{
 \item{numrow}{integer, the number of rows in the multiwell plate. The default value is 8 (i.e. 96 well plate).}

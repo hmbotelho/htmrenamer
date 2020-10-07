@@ -1,29 +1,3 @@
-#' Install and load dependencies
-#'
-#' Makes sure the target package is both installed and loaded into memory. Avoids unnecessary re-installs and re-loadings
-#'
-#' @param pckgname character, package name.
-#'
-#' @return \code{TRUE} if package is loaded successfully. \code{FALSE} otherwise.
-#'
-setup.dependency <- function(pckgname){
-
-    # If the package is not installed, install it
-    if(!(pckgname %in% installed.packages())){
-        install.packages(pckgname)
-    }
-
-    # If the package is not loaded, load it.
-    if(!(pckgname %in% loadedNamespaces())){
-        library(pckgname, character.only = TRUE)
-    }
-
-    pckgname %in% loadedNamespaces()
-}
-
-
-
-
 #' Create empty infile (data frame)
 #'
 #' Creates an empty microscope infile template, which can be printed to the console and/or saved as a file.
@@ -117,7 +91,7 @@ newinfile.df <- function(numrow = 8, numcol = 12, show = FALSE, saveto = charact
         if(!dir.exists(dirname(saveto))){
             dir.create(dirname(saveto), recursive = TRUE)
         }
-        write.csv(infile.df, saveto, quote = FALSE, row.names = FALSE)
+        utils::write.csv(infile.df, saveto, quote = FALSE, row.names = FALSE)
     }
 
     # return the infile
@@ -308,5 +282,5 @@ read.infile.df <- function(infilepath){
 #' @export
 echo <- function(message, printToGUI = TRUE, printToConsole = TRUE){
     if(printToConsole) print(message, quote = FALSE)
-    if(printToGUI)     insert(logWindow, message)
+    if(printToGUI)     gWidgets2::insert(logWindow, message)
 }

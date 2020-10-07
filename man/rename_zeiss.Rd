@@ -4,11 +4,20 @@
 \alias{rename_zeiss}
 \title{Zeiss renamer}
 \usage{
-rename_zeiss(sourcefolder, targetfolder, infilepath, numrow, numcol,
+rename_zeiss(
+  sourcefolder,
+  targetfolder,
+  infilepath,
+  numrow,
+  numcol,
   REGEXvalidimages = "^.*?s.*?t.*?\\\\.tif$",
   REGEXscenenum = "^.*/.*_s(.*)t.*\\\\.tif$",
-  REGEXtimenum = "^.*/.*_s.*t(.*)\\\\.tif$", printToGUI = FALSE,
-  move = FALSE)
+  REGEXtimenum = "^.*/.*_s.*t(.*)\\\\.tif$",
+  printMessages = TRUE,
+  printFiles = TRUE,
+  printToGUI = FALSE,
+  move = FALSE
+)
 }
 \arguments{
 \item{sourcefolder}{character, the folder with raw images. The folder usually has the folllowing name structure: "demoplate_01--2019_01_01_12_00_00"}
@@ -26,6 +35,10 @@ rename_zeiss(sourcefolder, targetfolder, infilepath, numrow, numcol,
 \item{REGEXscenenum}{character, regular expression capturing (\code{(\1)}) the scene number (i.e. well number)}
 
 \item{REGEXtimenum}{character, regular expression capturing (\code{(\1)}) the time number in a time lapse}
+
+\item{printMessages, }{logical, print messages in the console?}
+
+\item{printFiles, }{logical, print file-by-file progress in the console?}
 
 \item{printToGUI}{logical, print messages to the renamer GUI?}
 

@@ -27,9 +27,10 @@ High throughput microscopy systems output raw image files with systematic names 
 
 * **Zeiss:** `demoplate_01_s01t1.tif`
 * **Leica (MatrixScreener):** `I--L0000--S00--U00--V00--J08--E00--O00--X00--Y00--T0000--Z00--C00.ome.tif`
+* **Leica (Navigator):** `TileScan 1_A1_ch00.tif`, `TileScan 2_A1-1_t0_z0_ch00.tif`, ...
 * **...**
 
-The htmrenamer r package provides graphical and command line tools for renaming such files in order to generate a common file and folder structure, regardless of the system generating the images. The renaming process adds essential experimental metadata in the file and folder names:
+The htmrenamer R package provides graphical and command line tools for renaming such files in order to generate a common file and folder structure, regardless of the system generating the images. The renaming process adds essential experimental metadata in the file and folder names:
 * Plate name
 * Well number
 * Sub-position within the well
@@ -38,7 +39,7 @@ The htmrenamer r package provides graphical and command line tools for renaming 
 * Experimental treatment 1 (*e.g.* compound)
 * Experimental treatment 2 (*e.g.* compound concentration)
     
-htmrenamer produces file and folder structures such as the one depicted below or on the [sample data folder](/sample_data).
+htmrenamer produces file and folder structures such as the one depicted below or on the [sample data repository](https://github.com/hmbotelho/htmrenamer_testdata).
 
 ```
 plate_folder
@@ -56,7 +57,7 @@ plate_folder
 
 By adapting manufacturer-specific file names into a common structure, htmrenamer facilitates manual image inspection, regular expression-based data annotation (*e.g.* using [CellProfiler](https://cellprofiler.org/)) and enables downstream image analysis protocols to be readily performed regardless of the brand of the microscope generating the images. htmrenamer is best used as a complement to the [OME-TIFF](https://docs.openmicroscopy.org/ome-model/5.6.3/ome-tiff/) format.
 
-The [htmrenamer manual](https://github.com/hmbotelho/htmrenamer/blob/master/htmrenamer.pdf) documents all functions in the package.
+The [htmrenamer manual](https://github.com/hmbotelho/htmrenamer/releases/download/v1.1.0/htmrenamer_1.1.0.pdf) documents all functions in the package.
 
 
 
@@ -145,7 +146,7 @@ The file renaming tools take as inputs raw microscopy images and the microscope 
 ### <a name="renaming-zeiss">4.1. Zeiss</a>
 
 Images acquired in the CZI format must first be exported as TIF files (in Zen Blue edition: `File > Export/Import > Export > TIFF`).
-Sample exported images are available in the [sample data folder](/sample_data/Zeiss/confocal_raw)
+Sample exported images are available in the [sample data repository](https://github.com/hmbotelho/htmrenamer_testdata/tree/master/zeiss/01_T/raw)
 
 
 1. In the R command line type
@@ -190,7 +191,11 @@ rename_zeiss_gui()
 
 ### <a name="renaming-leica">4.2. Leica</a>
 
-Currently, htmrenamer only supports images generated with Leica MatrixScreener and exported as OME-TIFF.
+htmrenamer supports images generated with the following modules of the Leica LAS X software:  
+
+* **Leica MatrixScreener**. Files must be exported as OME-TIFF (`Auto-export`).
+* **Leica Navigator**. Files must be exported with (`Export > As Tiff...`).
+
 Sample exported images are available in the [sample data folder](/sample_data/Leica/confocal_raw)
 
 
@@ -211,18 +216,20 @@ rename_leica_gui()
 
 
 4. Specify the following details of the experiment:
-    * **Select input folder:** Folder with exported TIF files (typically named `platename--YY_MM_DD_HH_MM_SS`).
+    * **Select input folder:** Folder with exported TIF files (_e.g._ `platename--YY_MM_DD_HH_MM_SS` for MatrixScreener exports).
     * **Select output folder:** Folder where renamed images should be saved to.
     * **Select Microscope Infile:** Location of the infile.
-    * **Output experiment descriptors:** Export experiment metadata in Excel and CSV format.
+    * **Output experiment descriptors:** Export experiment metadata in Excel and CSV format. Only supported for MatrixScreener images.
     * **Lossless compression:** Performs lossless image compression using the “deflate” algorithm. Typically, this produces a file size ~20% lower than LZW-compressed images but removes all metadata (e.g. pixel size calibration).
 
 
-5. Click the `Start renaming` button to start the file renaming process. This is a copy-and-duplicate process.  
+5. Click the `Start renaming` button to start the file renaming process.  
 
 	**Note 1:** This is a copy-and-duplicate process.  
 	
 	**Note 2:** The name of the infile `txt` file should be meaningful as this will be propagated to the renamed files and folders.  
+	
+	**Note 3:** The Leica renaming tool handles both MatrixScreener and Navigator exports.  
 	
 
 6. Progress will be shown in the log text box as well as in the R console.
@@ -473,4 +480,4 @@ You should now be able to run htmrenamer.
 
 
 ## <a name="citation">7. Citation</a>
-Hagemeijer *et al* (2020) **An open-source high-content analysis workflow for CFTR function measurements using the forskolin-induced swelling assay** *submitted*
+Hagemeijer MC, Vonk AM, Awatade NT, Silva IAL, Tischer C, Hilsenstein V, Beekman JM, Amaral MD, Botelho HM (2020) **An open-source high-content analysis workflow for CFTR function measurements using the forskolin-induced swelling assay** *submitted*

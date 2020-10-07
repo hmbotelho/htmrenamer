@@ -4,8 +4,7 @@
 \alias{newinfile.df}
 \title{Create empty infile (data frame)}
 \usage{
-newinfile.df(numrow = 8, numcol = 12, show = FALSE,
-  saveto = character())
+newinfile.df(numrow = 8, numcol = 12, show = FALSE, saveto = character())
 }
 \arguments{
 \item{numrow}{integer, the number of rows in the multiwell plate. The default value is 8 (i.e. 96 well plate).}
