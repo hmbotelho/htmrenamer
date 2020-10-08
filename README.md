@@ -68,24 +68,42 @@ The [htmrenamer manual](https://github.com/hmbotelho/htmrenamer/releases/downloa
 The setup procedure installs the htmrenamer package in your computer. This is only required when using the package for the first time.
 Make sure to download the software matching your computer's operating system (Windows, macOS) and system architecture (32 bit, 64 bit).
 
-1. **Install Java:** [download](https://www.oracle.com/technetwork/java/javase/downloads/) and install the Oracle JDK.
+1. **Install XQuartz:** macOS users will need to [download](https://www.xquartz.org/) and install XQuartz in order to use the graphical user interface implemented in the `rename_leica_gui()` and `rename_zeiss_gui()` functions.
 
 
-2. **Install XQuartz:** macOS users will need to [download](https://www.xquartz.org/) and install XQuartz in order to use the graphical user interface implemented in the `rename_leica_gui()` and `rename_zeiss_gui()` functions.
+2. **Install R:** Download R from the [CRAN website](https://cran.r-project.org/). Then, install and run it.
 
 
-3. **Install R:** Download R from the [CRAN website](https://cran.r-project.org/). Then, install and run it.
-
-
-4. **Install the htmrenamer package:** use the R command line to install the [devtools](https://github.com/r-lib/devtools) package by typing
+3. **Install the htmrenamer package:** 
+	* Download the [latest htmrenamer release](https://github.com/hmbotelho/htmrenamer/releases) (`htmrenamer_xxx.tar.gz`).
+	* In the R command line type
 
 ```
-install.packages("devtools")
-library(devtools)
-install_github("hmbotelho/htmrenamer")
+install.packages(c("gWidgets2", "gWidgets2tcltk", "openxlsx", "reshape2", "tiff", "utils", "XML"), dependencies=T)
+install.packages("path_to_file/htmrenamer_xxx.tar.gz", repos=NULL)
 ```
 
-Hit enter/return after each line to execute the command.
+	Hit enter/return after each line to execute the command. If prompted, select a folder in your computer and a CRAN mirror.
+
+	* **Note 1:** The `.tar.gz` file can also be installed using the R graphical user interface (`Packages > Install package(s)from local files...` (PC) or `Packages & Data > Package Installer` (macOS, see screenshot below).
+	
+	<details><summary><i>macOS R package installer screenshot</i></summary>
+    
+		Select the options below to install a local `htmrenamer_xxx.tar.gz` file.  
+    
+		![macos package installer](./img/macos_Rpackageinstaller.png)
+
+    </details>
+	
+	
+	* **Note 2:** Alternatively, the development version of htmrenamer (warning: may contain experimental features) can be installed as follows  
+	
+	```
+	install.packages("devtools")
+	library(devtools)
+	install_github("hmbotelho/htmrenamer")
+	```
+
 
 
 
@@ -229,8 +247,6 @@ rename_leica_gui()
 	
 	**Note 2:** The name of the infile `txt` file should be meaningful as this will be propagated to the renamed files and folders.  
 	
-	**Note 3:** The Leica renaming tool handles both MatrixScreener and Navigator exports.  
-	
 
 6. Progress will be shown in the log text box as well as in the R console.
 
@@ -357,11 +373,21 @@ XQuartz can be downloaded from [this link](https://www.xquartz.org/).
 ___
 
 
+**Missing packages**
+When getting an error message similar to `there is no package called ‘packagename’`  install the missing package(s) with
+
+```
+install.packages("packagename")
+```
+___
+
+
 **Packages fail to install**  
-If any of the required packages fails to install (error message similar to `Error: package or namespace load failed for ‘packagename’`), remove the problematic package with
+If any of the required packages fails to install (error message similar to `Error: package or namespace load failed for ‘packagename’`), reinstall the problematic package with
 
 ```
 remove.packages(packagename)
+install.packages(packagename)
 ```
 
 and load htmrenamer with
@@ -372,108 +398,6 @@ library(htmrenamer)
 ___
 
 
-**rJava error 1**  
-If R thows the following (or similar) error message when loading htmrenamer or one of its functions
-
-```
-Error: package or namespace load failed for ‘xlsx’:
- .onLoad failed in loadNamespace() for 'rJava', details:
-  call: fun(libname, pkgname)
-  error: JAVA_HOME cannot be determined from the Registry
-```
-
-it means that the JDK is not installed. 
-Download the JDK from [here](https://www.oracle.com/java/technologies/javase-downloads.html). Choose the version that matches your operating system and system architecture (32 bit, 64 bit).
-___
-
-
-**rJava error 2**  
-If R thows the following (or similar) error message when loading htmrenamer or one of its functions
-
-```
-Error: package or namespace load failed for ‘xlsx’:
- .onLoad failed in loadNamespace() for 'xlsx', details:
-  call: fun(libname, pkgname)
-  error: Your java version is 14.  Need 1.5.0 or higher.
-```
-
-it means that there is an incompatibility between the JDK version intalled in your computer and the `xlsx` R package. 
-To install compatible versions, do the following:
-
-1. Uninstall the Java Development Kit (instructions for [Windows](https://www.java.com/en/download/help/uninstall_java.xml) and [macOS](https://www.java.com/en/download/help/mac_uninstall_java.xml))
-    
-2. Download and install [JDK version 13.0.1](https://www.oracle.com/java/technologies/javase/jdk13-archive-downloads.html). Choose the version that matches your operating system and system architecture (32 bit, 64 bit).
-    
-3. Open R and uninstall `xlsx`:
-    ```
-    remove.packages("xlsx")
-    ```
-    
-4. Install `xlsx`version 0.6.3:
-    ```
-    install.packages("devtools")
-    library(devtools)
-    install_version("xlsx", version = "0.6.3")
-    ```
-    
-It should now be possible to run htmrenamer.
-____
-
-
-**rJava error 3**  
-If R thows the following (or similar) error message when loading htmrenamer or one of its functions
-
-```
-Error: package or namespace load failed for ‘rJava’:
- .onLoad failed in loadNamespace() for 'rJava', details:
-  call: dyn.load(file, DLLpath = DLLpath, ...)
-  error: unable to load shared object '/Users/yourname/Library/R/3.6/library/rJava/libs/rJava.so':
-  dlopen(/Users/yourname/Library/R/3.6/library/rJava/libs/rJava.so, 6): Library not loaded: /Library/Java/JavaVirtualMachines/jdk-11.0.1.jdk/Contents/Home/lib/server/libjvm.dylib
-  Referenced from: /Users/yourname/Library/R/3.6/library/rJava/libs/rJava.so
-  Reason: image not found
-```
-
-it means that there is an incorrect linking of the JDK version installed in your computer and the rJava package, which htmrenamer depends on.
-
-First, make sure that JDK is installed ([download site](https://www.oracle.com/technetwork/java/javase/downloads/)). On **Windows** computers, reinstalling the JDK may be required.
-
-To relink Java correctly on **macOS** computers, open a Terminal window and type:
-
-```
-sudo R CMD javareconf
-```
-
-This will solve some of the situations. If the error persists, the only known solution is to replace the currently installed JDK by the one mentioned in the error message (version 10.0.1 in the exampe above). Please be aware that older Java versions may have security vulnerabilities.
-
-JDK may be uninstalled by pasting the typing commands on a Terminal window:
-
-*Uninstall Java*
-```
-sudo rm -fr /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin 
-sudo rm -fr /Library/PreferencePanes/JavaControlPanel.prefPane 
-sudo rm -fr ~/Library/Application\ Support/Oracle/Java
-```
-
-*Uninstall JDK (replace `<version>` with the JDK version installed on your system)*
-
-```
-sudo rm -rf /Library/Java/JavaVirtualMachines/jdk<version>.jdk
-```
-
-*Uninstall Java plugins*
-
-```
-sudo rm -rf /Library/PreferencePanes/JavaControlPanel.prefPane
-sudo rm -rf /Library/Internet\ Plug-Ins/JavaAppletPlugin.plugin
-sudo rm -rf /Library/LaunchAgents/com.oracle.java.Java-Updater.plist
-sudo rm -rf /Library/PrivilegedHelperTools/com.oracle.java.JavaUpdateHelper
-sudo rm -rf /Library/LaunchDaemons/com.oracle.java.Helper-Tool.plist
-sudo rm -rf /Library/Preferences/com.oracle.java.Helper-Tool.plist
-```
-
-Any given JDK version can be downloaded from the [Oracle Java Archive](https://www.oracle.com/technetwork/java/javase/archive-139210.html). Select and install the one that matches your operating system, system architecture (32/64 bit) and the version mentioned in the error message.
-
-You should now be able to run htmrenamer.
 
 
 

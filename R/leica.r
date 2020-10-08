@@ -99,9 +99,6 @@ getfiles.XML.LRP <- function(folder){
 #' 
 rename_leica_gui <- function(){
 
-    # library(gWidgets2tcltk)
-    # library(utils)
-
     # Launch dialog box
     mainWindow <- gWidgets2::gwindow(paste0("Leica File Renamer Tool    -    htmrenamer v", utils::packageVersion("htmrenamer")))
     size(mainWindow) <- c(300,620)
@@ -306,14 +303,14 @@ rename_leica <- function(sourcefolder, targetfolder, infilepath, compress = FALS
 #' @importFrom gWidgets2 svalue
 #' @importFrom tiff readTIFF writeTIFF
 #' @importFrom utils write.csv
-#' @importFrom xlsx write.xlsx
+#' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
 #' @importFrom XML getNodeSet names.XMLNode xmlAttrs xmlChildren xmlGetAttr xmlName xmlRoot xmlSApply xmlTreeParse xmlValue xpathSApply
 #' 
 rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = TRUE){
 
     # library(XML)
     # if(compress) library(tiff)
-    # if(outputDescriptors) library(xlsx)
+    # if(outputDescriptors) library(openxlsx)
 
     echo("Determining renaming parameters...", printToGUI = printToGUI, printToConsole = printMessages)
     echo("", printToGUI = printToGUI, printToConsole = printMessages)
@@ -730,18 +727,25 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
         # Save 2: ImagingSettings list
         targetxlsxChannels <- paste0(targetsubfolder, "settings_channels.xlsx")
         targetxlsxJobs     <- paste0(targetsubfolder, "settings_jobs.xlsx")
+        wbChannels         <- openxlsx::createWorkbook()
+        wbJobs             <- openxlsx::createWorkbook()
 
         for(job in 1:length(ImagingSettings)){
             JobName     <- paste0(NameSettings["TokenFieldJPos"], formatC(as.numeric(names(ImagingSettings)[job]), width=NameSettings["TokenFieldJPosDigits"], flag="0"))
+            ch_job      <- paste0("channels_", JobName)
             JobSettings <- data.frame(names(ImagingSettings[[job]][[1]]),
                                       ImagingSettings[[job]][[1]],
                                       stringsAsFactors = TRUE)
             colnames(JobSettings) <- c("Setting", JobName)
-            xlsx::write.xlsx(JobSettings, targetxlsxJobs, sheetName = JobName, row.names = FALSE, append = TRUE)
-
+            openxlsx::addWorksheet(wbJobs, JobName)
+            openxlsx::writeData(wbJobs, sheet = JobName, JobSettings)
+            
             ChannelSettings <- ImagingSettings[[job]][[2]]
-            xlsx::write.xlsx(ChannelSettings, targetxlsxChannels, sheetName = paste0("channels_", JobName), append = TRUE)
+            openxlsx::addWorksheet(wbChannels, ch_job)
+            openxlsx::writeData(wbChannels, sheet = ch_job, rowNames = TRUE, ChannelSettings)
         }
+        openxlsx::saveWorkbook(wbJobs, targetxlsxJobs, overwrite = T)
+        openxlsx::saveWorkbook(wbChannels, targetxlsxChannels, overwrite = T)
 
         # Save 3: Other settings
         utils::write.csv(data.frame(Setting = names(TemplateProperties), Value = TemplateProperties), paste0(targetsubfolder, "template_properties.csv"), row.names = FALSE)
@@ -749,7 +753,7 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
 
 
         # Clean up Global Environment
-        rm(targetxlsxChannels, targetxlsxJobs, job, JobName, JobSettings, ChannelSettings)
+        rm(targetxlsxChannels, targetxlsxJobs, wbJobs, wbChannels, job, JobName, ch_job, JobSettings, ChannelSettings)
 
         echo("Finished exporting experiment descriptors", printToGUI = printToGUI, printToConsole = printMessages)
         echo("", printToGUI = printToGUI, printToConsole = printMessages)

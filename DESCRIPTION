@@ -2,20 +2,22 @@ Package: htmrenamer
 Type: Package
 Title: File Renaming Tools for High Throughput Microscopy
 Version: 1.1.1
-Author: Hugo Botelho
+Author: Hugo Botelho <hugobotelho@gmail.com>
 Maintainer: Hugo Botelho <hugobotelho@gmail.com>
 Description: Enables the systematic renaming of Zeiss and Leica automated microscopes.
 License: GPL-3 + file LICENSE
+URL: https://github.com/hmbotelho/htmrenamer
+BugReports: https://github.com/hmbotelho/htmrenamer/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Imports:
-    gWidgets2tcltk,
     gWidgets2,
+    gWidgets2tcltk,
+    openxlsx,
     reshape2,
     tiff,
     utils,
-    xlsx,
     XML
 Suggests:
     testthat
