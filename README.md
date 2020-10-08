@@ -57,7 +57,7 @@ plate_folder
 
 By adapting manufacturer-specific file names into a common structure, htmrenamer facilitates manual image inspection, regular expression-based data annotation (*e.g.* using [CellProfiler](https://cellprofiler.org/)) and enables downstream image analysis protocols to be readily performed regardless of the brand of the microscope generating the images. htmrenamer is best used as a complement to the [OME-TIFF](https://docs.openmicroscopy.org/ome-model/5.6.3/ome-tiff/) format.
 
-The [htmrenamer manual](https://github.com/hmbotelho/htmrenamer/releases/download/v1.1.0/htmrenamer_1.1.0.pdf) documents all functions in the package.
+The [htmrenamer manual](./htmrenamer.pdf) documents all functions in the package.
 
 
 
@@ -78,25 +78,28 @@ Make sure to download the software matching your computer's operating system (Wi
 	* Download the [latest htmrenamer release](https://github.com/hmbotelho/htmrenamer/releases) (`htmrenamer_xxx.tar.gz`).
 	* In the R command line type
 
-```
-install.packages(c("gWidgets2", "gWidgets2tcltk", "openxlsx", "reshape2", "tiff", "utils", "XML"), dependencies=T)
-install.packages("path_to_file/htmrenamer_xxx.tar.gz", repos=NULL)
-```
+	```
+	install.packages(c("gWidgets2", "gWidgets2tcltk", "openxlsx", "reshape2", "tiff", "utils", "XML"), dependencies=T)
+	```
+	
+	*If prompted, select a folder in your computer and a CRAN mirror.*
+	
+	* Then, install htmrenamer with
 
-	Hit enter/return after each line to execute the command. If prompted, select a folder in your computer and a CRAN mirror.
+	```
+	install.packages("path_to_file/htmrenamer_xxx.tar.gz", repos=NULL)
+	```
 
-	* **Note 1:** The `.tar.gz` file can also be installed using the R graphical user interface (`Packages > Install package(s)from local files...` (PC) or `Packages & Data > Package Installer` (macOS, see screenshot below).
+	or using the R graphical user interface (`Packages > Install package(s) from local files...` (PC) or `Packages & Data > Package Installer`.
 	
 	<details><summary><i>macOS R package installer screenshot</i></summary>
-    
-		Select the options below to install a local `htmrenamer_xxx.tar.gz` file.  
-    
-		![macos package installer](./img/macos_Rpackageinstaller.png)
+	
+	![macos package installer](./img/macos_Rpackageinstaller.png)
+	
+	</details>
 
-    </details>
-	
-	
-	* **Note 2:** Alternatively, the development version of htmrenamer (warning: may contain experimental features) can be installed as follows  
+
+* **Note:** Alternatively, the development version of htmrenamer can be installed as follows (warning: may contain experimental features)  
 	
 	```
 	install.packages("devtools")
