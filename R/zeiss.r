@@ -125,6 +125,10 @@ matrix_snake <- function(x, nrow, ncol, byrow = FALSE){
 #' \code{\link{rename_leica_gui}} for the Leica renamer GUI.\cr
 #'
 #' @export
+#' @importFrom gWidgets2 addSpace gbutton ggroup glabel gprogressbar gspinbutton gtext gwindow insert svalue
+#' @importFrom tcltk tk_choose.dir tk_choose.files
+#' @importFrom utils choose.dir choose.files packageVersion
+#' 
 rename_zeiss_gui <- function(){
 
     # library(gWidgets2tcltk)
@@ -299,6 +303,8 @@ rename_zeiss_gui <- function(){
 #' \code{\link{rename_leica_gui}} is the function which implements the actual renaming algorithm.\cr
 #'
 #' @export
+#' @importFrom gWidgets2 svalue
+#' 
 rename_zeiss <- function(sourcefolder, targetfolder, infilepath, numrow, numcol, REGEXvalidimages = "^.*?s.*?t.*?\\.tif$", REGEXscenenum = "^.*/.*_s(.*)t.*\\.tif$", REGEXtimenum = "^.*/.*_s.*t(.*)\\.tif$", printMessages = TRUE, printFiles = TRUE, printToGUI = FALSE, move = FALSE){
 
     # read Infile

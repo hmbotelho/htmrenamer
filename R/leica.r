@@ -7,6 +7,7 @@
 #' @return character, the name of the software which generated the images.
 #'
 #' @export
+#' 
 whichLeicaSoftware <- function(folder){
     
     allfiles   <- list.files(folder, recursive = T)
@@ -44,6 +45,7 @@ whichLeicaSoftware <- function(folder){
 #' }
 #'
 #' @export
+#' 
 getfiles.XML.LRP <- function(folder){
 
     # There must be exactly one copy of these files:
@@ -91,6 +93,10 @@ getfiles.XML.LRP <- function(folder){
 #' \code{\link{rename_zeiss_gui}} for the Zeiss renamer GUI.\cr
 #'
 #' @export
+#' @importFrom gWidgets2 addSpace gbutton gcheckbox ggroup glabel gprogressbar gtext insert svalue gwindow
+#' @importFrom tcltk tk_choose.dir tk_choose.files
+#' @importFrom utils choose.dir packageVersion
+#' 
 rename_leica_gui <- function(){
 
     # library(gWidgets2tcltk)
@@ -237,6 +243,7 @@ rename_leica_gui <- function(){
 #' \code{\link{rename_leica_gui}} for interacting with this function using a GUI.
 #'
 #' @export
+#' 
 rename_leica <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = TRUE){
     
     software <- whichLeicaSoftware(sourcefolder)
@@ -296,6 +303,12 @@ rename_leica <- function(sourcefolder, targetfolder, infilepath, compress = FALS
 #' \code{\link{rename_leica_gui}} for interacting with this function using a GUI.
 #'
 #' @export
+#' @importFrom gWidgets2 svalue
+#' @importFrom tiff readTIFF writeTIFF
+#' @importFrom utils write.csv
+#' @importFrom xlsx write.xlsx
+#' @importFrom XML getNodeSet names.XMLNode xmlAttrs xmlChildren xmlGetAttr xmlName xmlRoot xmlSApply xmlTreeParse xmlValue xpathSApply
+#' 
 rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = TRUE){
 
     # library(XML)
@@ -1070,6 +1083,9 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
 #' \code{\link{rename_leica_gui}} for interacting with this function using a GUI.
 #'
 #' @export
+#' @importFrom gWidgets2 svalue
+#' @importFrom tiff readTIFF writeTIFF
+#' 
 rename_leica_navigator <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = TRUE){
     
     echo("Determining renaming parameters...", printToGUI = printToGUI, printToConsole = printMessages)

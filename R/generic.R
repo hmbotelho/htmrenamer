@@ -57,6 +57,8 @@
 #' newinfile.df(numrow = 16, numcol = 24, saveto = "./infile_template.csv")
 #'
 #' @export
+#' @importFrom utils write.csv
+#' 
 newinfile.df <- function(numrow = 8, numcol = 12, show = FALSE, saveto = character()){
 
     # sanity checks
@@ -243,6 +245,7 @@ newinfile.char <- function(numrow = 8, numcol = 12, show = FALSE, saveto = chara
 #' file.remove(tempfile)
 #'
 #' @export
+#' 
 read.infile.df <- function(infilepath){
 
     pattern <- "^(\\d\\d\\d\\d?)--([[:upper:]][[:upper:]]?)--(\\d\\d)--(\\d\\d)--(\\d\\d)--(.*?)\\s*--(.*\\S??)\\s*$"
@@ -280,6 +283,8 @@ read.infile.df <- function(infilepath){
 #' @param printToConsole logical, indicating whether or not to print the message to the console.
 #'
 #' @export
+#' @importFrom gWidgets2 insert
+#' 
 echo <- function(message, printToGUI = TRUE, printToConsole = TRUE){
     if(printToConsole) print(message, quote = FALSE)
     if(printToGUI)     gWidgets2::insert(logWindow, message)

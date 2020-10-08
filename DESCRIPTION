@@ -1,7 +1,7 @@
 Package: htmrenamer
 Type: Package
 Title: File Renaming Tools for High Throughput Microscopy
-Version: 1.1.0
+Version: 1.1.1
 Author: Hugo Botelho
 Maintainer: Hugo Botelho <hugobotelho@gmail.com>
 Description: Enables the systematic renaming of Zeiss and Leica automated microscopes.
