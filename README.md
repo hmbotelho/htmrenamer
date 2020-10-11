@@ -8,6 +8,8 @@
 ## Table of Contents
 * [1. Overview](#overview)
 * [2. Setup](#installation)
+	* [2.1. Windows](#installation-windows)
+	* [2.2. macOS](#installation-macos)
 * [3. Generating well descriptors](#descriptors)
 * [4. File renaming](#renaming)
     * [4.1. Zeiss](#renaming-zeiss)
@@ -66,46 +68,72 @@ The [htmrenamer manual](./htmrenamer.pdf) documents all functions in the package
 ## <a name="installation">2. Setup</a>
 
 The setup procedure installs the htmrenamer package in your computer. This is only required when using the package for the first time.
-Make sure to download the software matching your computer's operating system (Windows, macOS) and system architecture (32 bit, 64 bit).
-
-1. **Install XQuartz:** macOS users will need to [download](https://www.xquartz.org/) and install XQuartz in order to use the graphical user interface implemented in the `rename_leica_gui()` and `rename_zeiss_gui()` functions.
+The most common issues when installing htmrenamer are addressed in the [troubleshooting section](#troubleshooting).
 
 
-2. **Install R:** Download R from the [CRAN website](https://cran.r-project.org/). Then, install and run it.
+### <a name="installation-windows">2.1. Windows</a>
+
+1. **Install R:** Download R from the [CRAN website](https://cran.r-project.org/) and install it.
 
 
-3. **Install the htmrenamer package:** 
-	* Download the [latest htmrenamer release](https://github.com/hmbotelho/htmrenamer/releases) (`htmrenamer_xxx.tar.gz`).
-	* In the R command line type
+2. **Download htmrenamer:** Download the [latest htmrenamer release](https://github.com/hmbotelho/htmrenamer/releases) (`htmrenamer_xxx.tar.gz`).
+
+
+3. **Install the htmrenamer package:** Open R. In the command line type
 
 	```
-	install.packages(c("gWidgets2", "gWidgets2tcltk", "openxlsx", "reshape2", "tiff", "utils", "XML"), dependencies=T)
+	install.packages(c("gWidgets2", "gWidgets2tcltk", "openxlsx", "reshape2", "tiff", "XML"), dependencies=T)
+	install.packages("c:/path_to_file/htmrenamer_xxx.tar.gz", repos=NULL)
 	```
 	
 	*If prompted, select a folder in your computer and a CRAN mirror.*
 	
-	* Then, install htmrenamer with
-
-	```
-	install.packages("path_to_file/htmrenamer_xxx.tar.gz", repos=NULL)
-	```
-
-	or using the R graphical user interface (`Packages > Install package(s) from local files...` (PC) or `Packages & Data > Package Installer`.
-	
-	<details><summary><i>macOS R package installer screenshot</i></summary>
-	
-	![macos package installer](./img/macos_Rpackageinstaller.png)
-	
-	</details>
+	*The location of the `.tar.gz` file can also be provided with the R graphical user interface (`Packages > Install package(s) from local files...`*
 
 
-* **Note:** Alternatively, the development version of htmrenamer can be installed as follows (warning: may contain experimental features)  
+*Tested with R version 4.0.2 running under Windows 10 Home version 2004, build 19041.508*
+
+
+### <a name="installation-macos">2.2. macOS</a>
+
+1. **Install R:** Download R from the [CRAN website](https://cran.r-project.org/) and install it.
+
+
+2. **Install the Command Line Tools for Xcode:** Download and install the latest version matching your macOS version from [here](https://developer.apple.com/download/more/?=command%20line%20tools) (Apple ID required).
+
+
+3. **Install XQuartz:** Download and install from [here](https://www.xquartz.org/).
+
+
+4. **Log out and log in** from your macOS session. The XQuartz installer should request this.
+
+
+5. **Download htmrenamer:** Download the [latest htmrenamer release](https://github.com/hmbotelho/htmrenamer/releases) (`htmrenamer_xxx.tar.gz`). This file will show up in Finder as (`htmrenamer_xxx.tar`).
+
+
+6. **Install the htmrenamer package:** Open R. In the command line type
+
+	```
+	install.packages(c("gWidgets2", "gWidgets2tcltk", "openxlsx", "reshape2", "tiff", "XML"), dependencies=T)
+	install.packages("/path_to_file/htmrenamer_xxx.tar", repos=NULL, type="source")
+	```
 	
-	```
-	install.packages("devtools")
-	library(devtools)
-	install_github("hmbotelho/htmrenamer")
-	```
+	*If prompted, select a CRAN mirror.*
+	*If asked `Do you want to install from sources the packages which need compilation` answer `Yes` or `y`*
+
+The htmrenamer installation was positively tested in the following environments:
+
+|      **OS version**        | **R version** | **Command Line Tools version** | **XQuartz version** |
+|:--------------------------:|:-------------:|:------------------------------:|---------------------|
+|    macOS 10.15 Catalina    |     4.0.2     |              11.5              |        2.7.11       |
+|     macOS 10.14 Mojave     |     4.0.2     |              8.3.2             |        2.7.11       |
+| macOS 10.13.16 High Sierra |     4.0.2     |              8.3.2             |        2.7.11       |
+|     macOS 10.12 Sierra     |     3.6.3     |              8.3.2             |        2.7.11       |
+|   OS X 10.11 El Capitan    |     3.5.3     |               7.3              |        2.7.11       |
+|    OS X 10.10 Yosemite     |     3.3.3     |               6.4              |        2.7.11       |
+|    OS X 10.9 Mavericks     |     3.3.3     |               6.2              |        2.7.11       |
+
+*htmrenamer is not compatible with older macOS/OS X versions.*
 
 
 
@@ -370,7 +398,25 @@ The Leica renaming tool will ignore unused wells and sub-positions, but keep the
 This section contains fixes for the most common problems one may find when installing or running htmrenamer.
 
 
-**R freezes (macOS users)**  
+**otool error (macOS)**
+
+The following message is displayed if **Command Line Tools for Xcode** is not installed:
+
+```
+The "otool" command requires the command line developer tools. Would you like to install the tools now?
+```
+
+You may instruct R to install the Command Line Tools, but his requires that you are logged in with an Apple ID. If this is not the case the following message is displayed:
+
+```
+Can't install the software because it is not currently available from the software update server.
+```
+
+[Download](https://developer.apple.com/download/more/?=command%20line%20tools) and install the latest version of Command Line Tools matching your macOS version as described above (Apple ID required).
+___
+
+
+**R freezes (macOS)**  
 If XQuartz is not installed, R will freeze when running the `rename_leica_gui()` or `rename_zeiss_gui()` functions.
 XQuartz can be downloaded from [this link](https://www.xquartz.org/).
 ___

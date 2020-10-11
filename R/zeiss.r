@@ -127,7 +127,7 @@ matrix_snake <- function(x, nrow, ncol, byrow = FALSE){
 #' @export
 #' @importFrom gWidgets2 addSpace gbutton ggroup glabel gprogressbar gspinbutton gtext gwindow insert svalue
 #' @importFrom tcltk tk_choose.dir tk_choose.files
-#' @importFrom utils choose.dir choose.files packageVersion
+#' @import utils
 #' 
 rename_zeiss_gui <- function(){
 

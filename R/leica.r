@@ -95,7 +95,7 @@ getfiles.XML.LRP <- function(folder){
 #' @export
 #' @importFrom gWidgets2 addSpace gbutton gcheckbox ggroup glabel gprogressbar gtext insert svalue gwindow
 #' @importFrom tcltk tk_choose.dir tk_choose.files
-#' @importFrom utils choose.dir packageVersion
+#' @import utils
 #' 
 rename_leica_gui <- function(){
 
