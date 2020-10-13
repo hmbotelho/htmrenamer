@@ -11,6 +11,7 @@ BugReports: https://github.com/hmbotelho/htmrenamer/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Depends: R (>= 3.3.3)
 Imports:
     gWidgets2,
     gWidgets2tcltk,
