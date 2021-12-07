@@ -462,21 +462,37 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
 
     # Get settings from each imaging job
     JobCount <- length(AllJobsNode)
-    JobInfo  <- data.frame(row.names = c("name", "modality", "channelcount"),
+    JobInfo  <- data.frame(row.names = c("name", "modality", "sequentialmode", "channelcount"),
                            stringsAsFactors = FALSE)
     for(i in 1:JobCount){
         jobname       <- XML::xmlAttrs(AllJobsNode[[i]])[["BlockID"]]
-        jobmodality   <- switch(XML::names.XMLNode(AllJobsNode[[i]][["LDM_Block"]]),
-                                ATLCameraSettingDefinition   = "widefield",
-                                ATLConfocalSettingDefinition = "confocal")
-        if(is.null(jobmodality)) stop(paste0("Unknown modality for Job ", i, " [ ", jobname, "]"))
+        seqtype       <- ifelse(XML::names.XMLNode(AllJobsNode[[i]]) == "LDM_Block_Sequential", "sequential", "non sequential")
+        
+        jobmodality   <- if(seqtype == "non sequential"){
+            
+            # non sequential
+            if(is.null(AllJobsNode[[i]][["LDM_Block"]])) stop(paste0("Unknown modality for Job ", i, " [BlockID=\"", jobname, "\"]"))
+            
+            switch(XML::names.XMLNode(AllJobsNode[[i]][["LDM_Block"]]),
+                   ATLCameraSettingDefinition   = "widefield",
+                   ATLConfocalSettingDefinition = "confocal")
+        } else {
+            
+            # sequential
+            if(is.null(AllJobsNode[[i]][["LDM_Block_Sequential"]][["LDM_Block_Sequential_Master"]])) stop(paste0("Unknown modality for Job ", i, " [BlockID=\"", jobname, "\"]"))
+            
+            switch(XML::names.XMLNode(AllJobsNode[[i]][["LDM_Block_Sequential"]][["LDM_Block_Sequential_Master"]]),
+                   ATLCameraSettingDefinition   = "widefield",
+                   ATLConfocalSettingDefinition = "confocal")
+        }
 
         if(jobmodality == "widefield"){
 
             # Basic settings
-            newjob <- data.frame(c(name         = as.character(XML::xmlSApply(AllJobsNode[[i]], XML::xmlAttrs)),
-                                   modality     = "widefield",
-                                   channelcount = length(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLCameraSettingDefinition"]][["WideFieldChannelConfigurator"]]))))
+            newjob <- data.frame(c(name           = as.character(XML::xmlSApply(AllJobsNode[[i]], XML::xmlAttrs)),
+                                   modality       = "widefield",
+                                   sequentialmode = "non sequential",
+                                   channelcount   = length(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLCameraSettingDefinition"]][["WideFieldChannelConfigurator"]]))))
             names(newjob) <- jobname
             JobInfo <- cbind(JobInfo, newjob)
 
@@ -511,66 +527,163 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
         }
 
         if(jobmodality == "confocal"){
-
-            # Basic settings
-            newjob <- data.frame(c(name         = as.character(XML::xmlSApply(AllJobsNode[[i]], XML::xmlAttrs)),
-                                   modality     = "confocal",
-                                   channelcount = sum(XML::xpathSApply(AllJobsNode[[i]], "LDM_Block/ATLConfocalSettingDefinition/DetectorList/Detector", XML::xmlGetAttr, 'IsActive') == "1")))
-            names(newjob) <- jobname
-            JobInfo <- cbind(JobInfo, newjob)
-
-            # Advanced settings
-            JobDescriptors <- c(XML::xmlAttrs(AllJobsNode[[i]]),
-                                XML::xmlSApply(AllJobsNode[[i]], XML::xmlAttrs),
-                                XML::xmlAttrs(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]]),
-                                unlist(lapply(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]][["Spectro"]]), XML::xmlAttrs)),
-                                unlist(lapply(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]][["AotfList"]]), function(x) XML::xmlAttrs(x[["LaserLineSetting"]]))),
-                                unlist(lapply(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]][["DetectorList"]]), XML::xmlAttrs)),
-                                unlist(lapply(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]][["LaserArray"]]), XML::xmlAttrs)),
-                                LASXversion)
-
-            # Create data frame "ChannelDescriptors". Each column is one imaging channel
-            ChannelDescriptors <- XML::xpathSApply(AllJobsNode[[i]], "LDM_Block/ATLConfocalSettingDefinition/DetectorList/Detector", XML::xmlAttrs)
-            ChannelDescriptors <- ChannelDescriptors[sapply(ChannelDescriptors, function(x) x["IsActive"] == "1")]
-            ChannelDescriptors <- if(class(ChannelDescriptors) == "list"){
+            
+            if(seqtype == "non sequential"){
                 
-                allnames               <- lapply(ChannelDescriptors, names)
-                commonnames            <- Reduce(intersect, allnames)
-                ChannelDescriptorsTemp <- lapply(ChannelDescriptors, function(x) x[commonnames])
-                ChannelDescriptorsTemp <- lapply(ChannelDescriptorsTemp, as.data.frame, stringsAsFactors = FALSE)
-                do.call(cbind, ChannelDescriptorsTemp)
+                # Basic settings
+                newjob <- data.frame(c(name           = as.character(XML::xmlSApply(AllJobsNode[[i]], XML::xmlAttrs)),
+                                       modality       = "confocal",
+                                       sequentialmode = seqtype,
+                                       channelcount   = sum(XML::xpathSApply(AllJobsNode[[i]], "LDM_Block/ATLConfocalSettingDefinition/DetectorList/Detector", XML::xmlGetAttr, 'IsActive') == "1")))
+                names(newjob) <- jobname
+                JobInfo <- cbind(JobInfo, newjob)
                 
-            } else{
-                as.data.frame(ChannelDescriptors, stringsAsFactors = FALSE)
+                # Advanced settings
+                JobDescriptors <- c(XML::xmlAttrs(AllJobsNode[[i]]),
+                                    XML::xmlSApply(AllJobsNode[[i]], XML::xmlAttrs),
+                                    XML::xmlAttrs(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]]),
+                                    unlist(lapply(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]][["Spectro"]]), XML::xmlAttrs)),
+                                    unlist(lapply(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]][["AotfList"]]), function(x) XML::xmlAttrs(x[["LaserLineSetting"]]))),
+                                    unlist(lapply(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]][["DetectorList"]]), XML::xmlAttrs)),
+                                    unlist(lapply(XML::xmlChildren(AllJobsNode[[i]][["LDM_Block"]][["ATLConfocalSettingDefinition"]][["LaserArray"]]), XML::xmlAttrs)),
+                                    LASXversion)
+                
+                # Create data frame "ChannelDescriptors". Each column is one imaging channel
+                ChannelDescriptors <- XML::xpathSApply(AllJobsNode[[i]], "LDM_Block/ATLConfocalSettingDefinition/DetectorList/Detector", XML::xmlAttrs)
+                ChannelDescriptors <- ChannelDescriptors[sapply(ChannelDescriptors, function(x) x["IsActive"] == "1")]
+                ChannelDescriptors <- if(class(ChannelDescriptors) == "list"){
+                    
+                    allnames               <- lapply(ChannelDescriptors, names)
+                    commonnames            <- Reduce(intersect, allnames)
+                    ChannelDescriptorsTemp <- lapply(ChannelDescriptors, function(x) x[commonnames])
+                    ChannelDescriptorsTemp <- lapply(ChannelDescriptorsTemp, as.data.frame, stringsAsFactors = FALSE)
+                    do.call(cbind, ChannelDescriptorsTemp)
+                    
+                } else{
+                    as.data.frame(ChannelDescriptors, stringsAsFactors = FALSE)
+                }
+                colnames(ChannelDescriptors) <- paste0("C", formatC(0:(ncol(ChannelDescriptors)-1), width = as.numeric(NameSettings["TokenFieldCPosDigits"]), flag="0"))
+                temp               <- as.data.frame(matrix(rep(LASXversion, ncol(ChannelDescriptors)), 1, ncol(ChannelDescriptors), dimnames = list("LASXversion")))
+                colnames(temp)     <- colnames(ChannelDescriptors)
+                ChannelDescriptors <- rbind(ChannelDescriptors, temp)
+                
+                
+                
+                
+                BlockID <- JobDescriptors["BlockID"]
+                ImagingSettings[[BlockID]] <- list(JobDescriptors = JobDescriptors, Channels = ChannelDescriptors)
+                
+                # Determine the image bit depth. This information is required for the compression step.
+                bitdepth <- max(sapply(ImagingSettings, function(x) as.integer(x$JobDescriptors["BitSize"])), na.rm = TRUE)
+                
+                # Clean environment
+                rm(jobname, newjob, i)
+                rm(JobDescriptors, ChannelDescriptors, BlockID)
+                
             }
-            colnames(ChannelDescriptors) <- paste0("C", formatC(0:(ncol(ChannelDescriptors)-1), width = as.numeric(NameSettings["TokenFieldCPosDigits"]), flag="0"))
-            temp               <- as.data.frame(matrix(rep(LASXversion, ncol(ChannelDescriptors)), 1, ncol(ChannelDescriptors), dimnames = list("LASXversion")))
-            colnames(temp)     <- colnames(ChannelDescriptors)
-            ChannelDescriptors <- rbind(ChannelDescriptors, temp)
+            
+            if(seqtype == "sequential"){
+
+                # Basic settings
+                SeqNames <- XML::xpathSApply(AllJobsNode[[i]], "LDM_Block_Sequential/LDM_Block_Sequential_List/ATLConfocalSettingDefinition", XML::xmlAttrs)["UserSettingName",]
+                SeqCount <- length(SeqNames)
+                newjob   <- data.frame(c(name           = as.character(XML::xmlSApply(AllJobsNode[[i]], XML::xmlAttrs))[3],
+                                         modality       = "confocal",
+                                         sequentialmode = seqtype,
+                                         sequencecount  = SeqCount))
+                names(newjob) <- jobname
+                JobInfo <- cbind(JobInfo, newjob)
+                
+                # Advanced settings
+                AllSeqNodeMaster <- XML::getNodeSet(AllJobsNode[[i]], "//LDM_Block_Sequential//LDM_Block_Sequential_Master")
+                AllSeqNode       <- XML::getNodeSet(AllJobsNode[[i]], "//LDM_Block_Sequential//LDM_Block_Sequential_List")
+                
+                JobDescriptors   <- XML::xmlAttrs(AllJobsNode[[i]])
+                temp             <- as.character(XML::xmlSApply(AllJobsNode[[i]], XML::xmlAttrs))
+                names(temp)      <- rownames(XML::xmlSApply(AllJobsNode[[i]], XML::xmlAttrs))
+                JobDescriptors   <- c(JobDescriptors,
+                                      temp,
+                                      XML::xmlAttrs(AllSeqNode[[1]][["ATLConfocalSettingDefinition"]]))
+                ChannelDescriptors <- NULL
+
+                
+                for(s in 1:length(SeqNames)){
+
+                    ThisSeqNodeMaster  <- XML::getNodeSet(AllJobsNode[[i]], "//LDM_Block_Sequential//LDM_Block_Sequential_Master//ATLConfocalSettingDefinition")[[1]]
+                    ThisSeqNode        <- XML::getNodeSet(AllJobsNode[[i]], "//LDM_Block_Sequential//LDM_Block_Sequential_List//ATLConfocalSettingDefinition")[[s]]
+                    DetectorListMaster <- lapply(XML::xmlChildren(ThisSeqNodeMaster[["DetectorList"]]), XML::xmlAttrs)
+                    
+                    allnames           <- lapply(DetectorListMaster, names)
+                    commonnames        <- Reduce(intersect, allnames)
+                    DetectorDfMaster   <- lapply(DetectorListMaster, function(x) x[commonnames])
+                    DetectorDfMaster   <- as.data.frame(DetectorDfMaster, stringsAsFactors = FALSE)
+                    colnames(DetectorDfMaster) <- as.character(DetectorDfMaster["Name",])
+                    DetectorDfMaster   <- DetectorDfMaster[-c(1:6),]
+
+                    JobDescriptors     <- c(JobDescriptors,
+                                            unlist(lapply(XML::xmlChildren(ThisSeqNode[["Spectro"]]), XML::xmlAttrs)),
+                                            unlist(lapply(XML::xmlChildren(ThisSeqNode[["AotfList"]]), function(x) XML::xmlAttrs(x[["LaserLineSetting"]]))),
+                                            unlist(lapply(XML::xmlChildren(ThisSeqNode[["DetectorList"]]), XML::xmlAttrs)),
+                                            unlist(DetectorListMaster),
+                                            unlist(lapply(XML::xmlChildren(ThisSeqNode[["LaserArray"]]), XML::xmlAttrs)),
+                                            LASXversion)
+
+                    # Create data frame "ChannelDescriptors". Each column is one imaging channel
+                    ChannelDescriptors0 <- XML::xpathApply(ThisSeqNode, "DetectorList/Detector", XML::xmlAttrs)
+                    ChannelDescriptors0 <- ChannelDescriptors0[sapply(ChannelDescriptors0, function(x) x["IsActive"] == "1")]
+                    ChannelDescriptors0 <- if(class(ChannelDescriptors0) == "list"){
+                        
+                        allnames               <- lapply(ChannelDescriptors0, names)
+                        commonnames            <- Reduce(intersect, allnames)
+                        ChannelDescriptorsTemp <- lapply(ChannelDescriptors0, function(x) x[commonnames])
+                        ChannelDescriptorsTemp <- lapply(ChannelDescriptorsTemp, as.data.frame, stringsAsFactors = FALSE)
+                        do.call(cbind, ChannelDescriptorsTemp)
+                        
+                    } else{
+                        as.data.frame(ChannelDescriptors0, stringsAsFactors = FALSE)
+                    }
+                    temp1               <- DetectorDfMaster[,as.character(ChannelDescriptors0["Name",]), drop=FALSE]
+                    temp2               <- as.data.frame(matrix(rep(LASXversion, ncol(ChannelDescriptors0)), 1, ncol(ChannelDescriptors0), dimnames = list("LASXversion")))
+                    colnames(temp1)     <- colnames(ChannelDescriptors0)
+                    colnames(temp2)     <- colnames(ChannelDescriptors0)
+                    ChannelDescriptors0 <- do.call(rbind, list(ChannelDescriptors0, temp1, temp2))
 
 
+                    ChannelDescriptors <- if(is.null(ChannelDescriptors)){
+                        # Initialize information on C00, ...
+                        ChannelDescriptors0
+                    } else{
+                        # Previous channels exist. Add further ones.
+                        cbind(ChannelDescriptors, ChannelDescriptors0)
+                    }
+                    colnames(ChannelDescriptors) <- paste0("C", formatC(0:(ncol(ChannelDescriptors)-1), width = as.numeric(NameSettings["TokenFieldCPosDigits"]), flag="0"))
 
+                    
+                    BlockID <- JobDescriptors["BlockID"]
+                    ImagingSettings[[BlockID]] <- list(JobDescriptors = JobDescriptors, Channels = ChannelDescriptors)
+                    
+                    # Determine the image bit depth. This information is required for the compression step.
+                    bitdepth <- max(sapply(ImagingSettings, function(x) as.integer(x$JobDescriptors["BitSize"])), na.rm = TRUE)
+                    
+                    # Clean environment
+                    if(exists("jobname")) rm(jobname)
+                    if(exists("newjob")) rm(newjob)
+                    if(exists("BlockID")) rm(BlockID)
 
-            BlockID <- JobDescriptors["BlockID"]
-            ImagingSettings[[BlockID]] <- list(JobDescriptors = JobDescriptors, Channels = ChannelDescriptors)
+                }
 
-            # Determine the image bit depth. This information is required for the compression step.
-            bitdepth <- max(sapply(ImagingSettings, function(x) as.integer(x$JobDescriptors["BitSize"])), na.rm = TRUE)
-
-            # Clean environment
-            rm(jobname, newjob, i)
-            rm(JobDescriptors, ChannelDescriptors, BlockID)
-
+            }
+            
         }
 
-        rm(jobmodality)
     }
 
-
+    
     echo(paste0("Finished parsing ", file.lrp), printToGUI = printToGUI, printToConsole = printMessages)
 
     # Clean Global Environment
-    rm(doc, top, AllJobsNode)
+    rm(jobmodality, seqtype, JobDescriptors, ChannelDescriptors, allnames, commonnames)
+    rm(doc, top, AllJobsNode, AllSeqNode, AllSeqNodeMaster, i, s)
 
 
 

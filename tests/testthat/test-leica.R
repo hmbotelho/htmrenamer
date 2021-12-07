@@ -155,6 +155,27 @@ test_that("Detect source software: Leica MatrixScreener #07: SP8 TC dataset", {
     expect_identical(software_name, "MatrixScreener")
 })
 
+test_that("Detect source software: Leica MatrixScreener #08: SP8 PC dataset", {
+    
+    # Download data
+    testdir     <- tempdir()
+    path_infile <- paste0(testdir, "./testplate.txt")
+    cat("Test folder:", testdir)
+    download_test_data1(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_matrixscreener/08_SP8_PC/raw.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Test software detection
+    path_raw_img  <- paste0(testdir, "/raw")
+    software_name <- whichLeicaSoftware(path_raw_img)
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(software_name, "MatrixScreener")
+})
+
 
 
 
@@ -914,6 +935,63 @@ test_that("Renaming Leica MatrixScreener #07: SP8 TC dataset (no compression)", 
     download_test_data2(testfolder = testdir, 
                         zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_matrixscreener/07_SP8_TC/raw.zip", 
                         zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_matrixscreener/07_SP8_TC/renamed.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_matrixscreener(sourcefolder      = path_raw_img, 
+                                targetfolder      = testdir, 
+                                infilepath        = path_infile, 
+                                compress          = FALSE, 
+                                move              = FALSE, 
+                                outputDescriptors = TRUE, 
+                                printMessages     = FALSE, 
+                                printFiles        = FALSE, 
+                                printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "(/renamer\\.log$|\\.csv$|\\.xlsx$)")
+    if(!all(file.exists(paste0(testdir, "/renamed/Fields_active.csv")), file.exists(paste0(testdir, "/testplate/Fields_active.csv")))){
+        mismatches <- c(mismatches, "missing 'Fields_active.csv'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/Fields_all.csv")), file.exists(paste0(testdir, "/testplate/Fields_all.csv")))){
+        mismatches <- c(mismatches, "missing 'Fields_all.csv'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/settings_channels.xlsx")), file.exists(paste0(testdir, "/testplate/settings_channels.xlsx")))){
+        mismatches <- c(mismatches, "missing 'settings_channels.xlsx'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/settings_filenames.csv")), file.exists(paste0(testdir, "/testplate/settings_filenames.csv")))){
+        mismatches <- c(mismatches, "missing 'settings_filenames.csv'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/settings_jobs.xlsx")), file.exists(paste0(testdir, "/testplate/settings_jobs.xlsx")))){
+        mismatches <- c(mismatches, "missing 'settings_jobs.xlsx'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/template_properties.csv")), file.exists(paste0(testdir, "/testplate/template_properties.csv")))){
+        mismatches <- c(mismatches, "missing 'template_properties.csv'")
+    }
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica MatrixScreener #08: SP8 PC dataset (no compression)", {
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_matrixscreener/08_SP8_PC/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_matrixscreener/08_SP8_PC/renamed.zip", 
                         delete_zip_files = TRUE)
     
     # Rename files
@@ -2078,6 +2156,65 @@ test_that("Renaming Leica MatrixScreener #07: SP8 TC dataset (lossless compressi
     download_test_data2(testfolder = testdir, 
                         zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_matrixscreener/07_SP8_TC/raw.zip", 
                         zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_matrixscreener/07_SP8_TC/renamed_deflate.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_matrixscreener(sourcefolder      = path_raw_img, 
+                                targetfolder      = testdir, 
+                                infilepath        = path_infile, 
+                                compress          = TRUE, 
+                                move              = FALSE, 
+                                outputDescriptors = TRUE, 
+                                printMessages     = FALSE, 
+                                printFiles        = FALSE, 
+                                printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "(/renamer\\.log$|\\.csv$|\\.xlsx$)")
+    if(!all(file.exists(paste0(testdir, "/renamed/Fields_active.csv")), file.exists(paste0(testdir, "/testplate/Fields_active.csv")))){
+        mismatches <- c(mismatches, "missing 'Fields_active.csv'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/Fields_all.csv")), file.exists(paste0(testdir, "/testplate/Fields_all.csv")))){
+        mismatches <- c(mismatches, "missing 'Fields_all.csv'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/settings_channels.xlsx")), file.exists(paste0(testdir, "/testplate/settings_channels.xlsx")))){
+        mismatches <- c(mismatches, "missing 'settings_channels.xlsx'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/settings_filenames.csv")), file.exists(paste0(testdir, "/testplate/settings_filenames.csv")))){
+        mismatches <- c(mismatches, "missing 'settings_filenames.csv'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/settings_jobs.xlsx")), file.exists(paste0(testdir, "/testplate/settings_jobs.xlsx")))){
+        mismatches <- c(mismatches, "missing 'settings_jobs.xlsx'")
+    }
+    if(!all(file.exists(paste0(testdir, "/renamed/template_properties.csv")), file.exists(paste0(testdir, "/testplate/template_properties.csv")))){
+        mismatches <- c(mismatches, "missing 'template_properties.csv'")
+    }
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica MatrixScreener #08: SP8 PC dataset (lossless compression)", {
+    
+    skip_if(!test_compression, message = "will not test compression")
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_matrixscreener/08_SP8_PC/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_matrixscreener/08_SP8_PC/renamed_deflate.zip", 
                         delete_zip_files = TRUE)
     
     # Rename files
