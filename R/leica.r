@@ -682,8 +682,7 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
     echo(paste0("Finished parsing ", file.lrp), printToGUI = printToGUI, printToConsole = printMessages)
 
     # Clean Global Environment
-    rm(jobmodality, seqtype, JobDescriptors, ChannelDescriptors, allnames, commonnames)
-    rm(doc, top, AllJobsNode, AllSeqNode, AllSeqNodeMaster, i, s)
+    rm(jobmodality, seqtype, doc, top, AllJobsNode)
 
 
 
@@ -1204,7 +1203,7 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
 #' @importFrom tiff readTIFF writeTIFF
 #' 
 rename_leica_navigator <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = TRUE){
-    
+
     echo("Determining renaming parameters...", printToGUI = printToGUI, printToConsole = printMessages)
     echo("The 'Output descriptors' option is not available", printToGUI = printToGUI, printToConsole = printMessages)
     echo("", printToGUI = printToGUI, printToConsole = printMessages)

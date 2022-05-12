@@ -1,8 +1,7 @@
 library(htmrenamer)
 source("./helper_functions.R")
 perform_lengthy_tests <- TRUE
-test_compression      <- TRUE
-# context("renaming files and checking results - Leica")
+test_compression      <- FALSE
 
 
 

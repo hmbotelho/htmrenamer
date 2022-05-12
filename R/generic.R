@@ -289,3 +289,114 @@ echo <- function(message, printToGUI = TRUE, printToConsole = TRUE){
     if(printToConsole) print(message, quote = FALSE)
     if(printToGUI)     gWidgets2::insert(logWindow, message)
 }
+
+
+
+
+# Returns a matrix filled with x according to a snaking pattern
+matrix_snake <- function(x, nrow, ncol, byrow = FALSE){
+  
+  # Sanity check
+  if(!is.vector(x)) stop("x must be a vector")
+  if(is.na(nrow)) stop("nrow must be integer")
+  if(is.na(ncol)) stop("ncol must be integer")
+  if(is.null(nrow)) stop("nrow must be integer")
+  if(is.null(ncol)) stop("ncol must be integer")
+  if(nrow - as.integer(nrow)) stop("nrow must be integer")
+  if(ncol - as.integer(ncol)) stop("ncol must be integer")
+  if(!(nrow >= 0)) stop("nrow must be positive")
+  if(!(ncol >= 0)) stop("ncol must be positive")
+  if(length(x) > nrow*ncol) stop("The length of x is larger than the matrix size")
+  if(length(x) < nrow*ncol){
+    warning("The length of x is smaller than the matrix size. x will be recycled")
+    x <- rep(x, ceiling(nrow*ncol/length(x)))
+    x <- x[1:(nrow*ncol)]
+  }
+  
+  # Let us snake along a nrow*ncol matrix
+  
+  # Initialize variables
+  mat <- matrix(integer(), nrow, ncol)
+  n <- nrow * ncol
+  ic <- 1
+  ir <- 1
+  
+  
+  if(byrow){
+    
+    direction <- "right"
+    
+    # Do the snaking
+    for(i in 1:n){
+      
+      mat[ir,ic] <- x[i]
+      
+      # point to the next cell in the matrix
+      if(direction == "right"){
+        
+        # Going right
+        if(i%%ncol == 0){
+          # This is the last column. Move down
+          direction <- "left"
+          ir <- ir+1
+        } else{
+          # Continue moving right
+          ic <- ic+1
+        }
+        
+        
+      } else{
+        
+        # Going left
+        if(ic == 1){
+          # This is the first column. Move down
+          direction <- "right"
+          ir <- ir+1
+        } else{
+          # Continue moving left
+          ic <- ic-1
+        }
+      }
+      
+    }
+    
+  } else{
+    
+    direction <- "down"
+    
+    # Do the snaking
+    for(i in 1:n){
+      
+      mat[ir,ic] <- x[i]
+      
+      # point to the next cell in the matrix
+      if(direction == "down"){
+        # Going down
+        if(i%%nrow == 0){
+          # This is the last row. Move to the side
+          direction <- "up"
+          ic <- ic+1
+        } else{
+          # Continue moving down
+          ir <- ir+1
+        }
+        
+        
+      } else{
+        # Going up
+        if(ir == 1){
+          # This is the first row. Move to the side
+          direction <- "down"
+          ic <- ic+1
+        } else{
+          # Continue moving up
+          ir <- ir-1
+        }
+      }
+      
+    }
+    
+  }
+  
+  mat
+}
