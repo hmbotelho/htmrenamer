@@ -1,5 +1,6 @@
 library(htmrenamer)
 source("./helper_functions.R")
+options(timeout = 1000)          # Allow 1000s to download test data
 perform_lengthy_tests <- TRUE
 test_compression      <- FALSE
 
@@ -567,6 +568,153 @@ test_that("Detect source software: Leica Navigator #19: PZC, export raw+director
     cat("Test folder:", testdir)
     download_test_data1(testfolder = testdir, 
                         zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/19_raw_dir_overl_comp/raw.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Test software detection
+    path_raw_img  <- paste0(testdir, "/raw")
+    software_name <- whichLeicaSoftware(path_raw_img)
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(software_name, "Navigator")
+})
+
+test_that("Detect source software: Leica Navigator #20: PTCM export with no options dataset", {
+    
+    # Download data
+    testdir     <- tempdir()
+    path_infile <- paste0(testdir, "./testplate.txt")
+    cat("Test folder:", testdir)
+    download_test_data1(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/20_tilescan_nothing/raw.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Test software detection
+    path_raw_img  <- paste0(testdir, "/raw")
+    software_name <- whichLeicaSoftware(path_raw_img)
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(software_name, "Navigator")
+})
+
+test_that("Detect source software: Leica Navigator #21: PTCM export overlay dataset", {
+    
+    # Download data
+    testdir     <- tempdir()
+    path_infile <- paste0(testdir, "./testplate.txt")
+    cat("Test folder:", testdir)
+    download_test_data1(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/21_tilescan_overl/raw.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Test software detection
+    path_raw_img  <- paste0(testdir, "/raw")
+    software_name <- whichLeicaSoftware(path_raw_img)
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(software_name, "Navigator")
+})
+
+test_that("Detect source software: Leica Navigator #22: PTCM export directories dataset", {
+    
+    # Download data
+    testdir     <- tempdir()
+    path_infile <- paste0(testdir, "./testplate.txt")
+    cat("Test folder:", testdir)
+    download_test_data1(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/22_tilescan_dir/raw.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Test software detection
+    path_raw_img  <- paste0(testdir, "/raw")
+    software_name <- whichLeicaSoftware(path_raw_img)
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(software_name, "Navigator")
+})
+
+test_that("Detect source software: Leica Navigator #23: PTCM export overlay+directories dataset", {
+    
+    # Download data
+    testdir     <- tempdir()
+    path_infile <- paste0(testdir, "./testplate.txt")
+    cat("Test folder:", testdir)
+    download_test_data1(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/23_tilescan_dir_overl/raw.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Test software detection
+    path_raw_img  <- paste0(testdir, "/raw")
+    software_name <- whichLeicaSoftware(path_raw_img)
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(software_name, "Navigator")
+})
+
+test_that("Detect source software: Leica Navigator #24: PTCM export raw dataset", {
+    
+    # Download data
+    testdir     <- tempdir()
+    path_infile <- paste0(testdir, "./testplate.txt")
+    cat("Test folder:", testdir)
+    download_test_data1(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/24_tilescan_raw/raw.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Test software detection
+    path_raw_img  <- paste0(testdir, "/raw")
+    software_name <- whichLeicaSoftware(path_raw_img)
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(software_name, "Navigator")
+})
+
+test_that("Detect source software: Leica Navigator #25: PTCM export overlay+raw dataset", {
+    
+    # Download data
+    testdir     <- tempdir()
+    path_infile <- paste0(testdir, "./testplate.txt")
+    cat("Test folder:", testdir)
+    download_test_data1(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/25_tilescan_raw_overl/raw.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Test software detection
+    path_raw_img  <- paste0(testdir, "/raw")
+    software_name <- whichLeicaSoftware(path_raw_img)
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(software_name, "Navigator")
+})
+
+test_that("Detect source software: Leica Navigator #26: PTCM export overlay+directories+raw dataset", {
+    
+    # Download data
+    testdir     <- tempdir()
+    path_infile <- paste0(testdir, "./testplate.txt")
+    cat("Test folder:", testdir)
+    download_test_data1(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/26_tilescan_raw_dir_overl/raw.zip", 
                         delete_zip_files = TRUE)
     
     # Test software detection
@@ -1756,6 +1904,279 @@ test_that("Renaming Leica Navigator files #19: PZC, export raw+directories+overl
     download_test_data2(testfolder = testdir, 
                         zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/19_raw_dir_overl_comp/raw.zip", 
                         zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/19_raw_dir_overl_comp/renamed.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = FALSE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #20: PTCM export with no options dataset (no compression)", {
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/20_tilescan_nothing/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/20_tilescan_nothing/renamed.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = FALSE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #21: PTCM export overlay dataset (no compression)", {
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/21_tilescan_overl/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/21_tilescan_overl/renamed.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = FALSE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #22: PTCM export directories dataset (no compression)", {
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/22_tilescan_dir/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/22_tilescan_dir/renamed.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = FALSE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #23: PTCM export overlay+directories dataset (no compression)", {
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/23_tilescan_dir_overl/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/23_tilescan_dir_overl/renamed.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = FALSE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #24: PTCM export raw dataset (no compression)", {
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/24_tilescan_raw/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/24_tilescan_raw/renamed.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = FALSE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #25: PTCM export overlay+raw dataset (no compression)", {
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/25_tilescan_raw_overl/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/25_tilescan_raw_overl/renamed.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = FALSE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #26: PTCM export overlay+directories+raw dataset (no compression)", {
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/26_tilescan_raw_dir_overl/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/26_tilescan_raw_dir_overl/renamed.zip", 
                         delete_zip_files = TRUE)
     
     # Rename files
@@ -3016,6 +3437,293 @@ test_that("Renaming Leica Navigator files #19: PZC, export raw+directories+overl
     download_test_data2(testfolder = testdir, 
                         zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/19_raw_dir_overl_comp/raw.zip", 
                         zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/19_raw_dir_overl_comp/renamed_deflate.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = TRUE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #20: PTCM export with no options dataset (lossless compression)", {
+    
+    skip_if(!test_compression, message = "will not test compression")
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/20_tilescan_nothing/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/20_tilescan_nothing/renamed_deflate.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = TRUE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #21: PTCM export overlay dataset (lossless compression)", {
+    
+    skip_if(!test_compression, message = "will not test compression")
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/21_tilescan_overl/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/21_tilescan_overl/renamed_deflate.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = TRUE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #22: PTCM export directories dataset (lossless compression)", {
+    
+    skip_if(!test_compression, message = "will not test compression")
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/22_tilescan_dir/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/22_tilescan_dir/renamed_deflate.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = TRUE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #23: PTCM export overlay+directories dataset (lossless compression)", {
+    
+    skip_if(!test_compression, message = "will not test compression")
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/23_tilescan_dir_overl/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/23_tilescan_dir_overl/renamed_deflate.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = TRUE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #24: PTCM export raw dataset (lossless compression)", {
+    
+    skip_if(!test_compression, message = "will not test compression")
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/24_tilescan_raw/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/24_tilescan_raw/renamed_deflate.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = TRUE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #25: PTCM export overlay+raw dataset (lossless compression)", {
+    
+    skip_if(!test_compression, message = "will not test compression")
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/25_tilescan_raw_overl/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/25_tilescan_raw_overl/renamed_deflate.zip", 
+                        delete_zip_files = TRUE)
+    
+    # Rename files
+    path_raw_img <- paste0(testdir, "/raw")
+    path_infile  <- paste0(testdir, "/testplate.txt")
+    rename_leica_navigator(sourcefolder      = path_raw_img, 
+                           targetfolder      = testdir, 
+                           infilepath        = path_infile, 
+                           compress          = TRUE, 
+                           move              = FALSE, 
+                           outputDescriptors = TRUE, 
+                           printMessages     = FALSE, 
+                           printFiles        = FALSE, 
+                           printToGUI        = FALSE)
+    
+    # Compare outputs
+    path_ren_img <- paste0(testdir, "/testplate")
+    path_ref_img <- paste0(testdir, "/renamed")
+    mismatches <- compare_datasets(dir1 = path_ref_img, 
+                                   dir2 = path_ren_img, 
+                                   exclude_regex = "/renamer\\.log$")
+    
+    # Clean up
+    if(dir.exists(path_raw_img)) unlink(path_raw_img, recursive = T)
+    if(dir.exists(path_ren_img)) unlink(path_ren_img, recursive = T)
+    if(dir.exists(path_ref_img)) unlink(path_ref_img, recursive = T)
+    if(file.exists(path_infile)) unlink(path_infile)
+    
+    expect_identical(mismatches, character(0))
+})
+
+test_that("Renaming Leica Navigator files #26: PTCM export overlay+directories+raw dataset (lossless compression)", {
+    
+    skip_if(!test_compression, message = "will not test compression")
+    
+    # Download data
+    testdir <- tempdir()
+    cat("Test folder:", testdir)
+    download_test_data2(testfolder = testdir, 
+                        zip_raw_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/26_tilescan_raw_dir_overl/raw.zip", 
+                        zip_ren_url = "https://github.com/hmbotelho/htmrenamer_testdata/raw/master/leica_navigator/26_tilescan_raw_dir_overl/renamed_deflate.zip", 
                         delete_zip_files = TRUE)
     
     # Rename files

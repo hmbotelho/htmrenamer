@@ -241,7 +241,7 @@ rename_leica_gui <- function(){
 #'
 #' @export
 #' 
-rename_leica <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = TRUE){
+rename_leica <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = FALSE){
     
     software <- whichLeicaSoftware(sourcefolder)
     
@@ -306,7 +306,7 @@ rename_leica <- function(sourcefolder, targetfolder, infilepath, compress = FALS
 #' @importFrom openxlsx createWorkbook addWorksheet writeData saveWorkbook
 #' @importFrom XML getNodeSet names.XMLNode xmlAttrs xmlChildren xmlGetAttr xmlName xmlRoot xmlSApply xmlTreeParse xmlValue xpathSApply
 #' 
-rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = TRUE){
+rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = FALSE){
 
     # library(XML)
     # if(compress) library(tiff)
@@ -1202,7 +1202,7 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
 #' @importFrom gWidgets2 svalue
 #' @importFrom tiff readTIFF writeTIFF
 #' 
-rename_leica_navigator <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = TRUE){
+rename_leica_navigator <- function(sourcefolder, targetfolder, infilepath, compress = FALSE, move = FALSE, outputDescriptors = TRUE, printMessages = TRUE, printFiles = TRUE, printToGUI = FALSE){
 
     echo("Determining renaming parameters...", printToGUI = printToGUI, printToConsole = printMessages)
     echo("The 'Output descriptors' option is not available", printToGUI = printToGUI, printToConsole = printMessages)
@@ -1229,25 +1229,75 @@ rename_leica_navigator <- function(sourcefolder, targetfolder, infilepath, compr
     echo("Finished parsing microscope In-File", printToGUI = printToGUI, printToConsole = printMessages)
     
     
+
+    # Navigator may use a variety of schemas when exporting tif images, depending on the version
+    # Detect Navigator export schema
+    allimages <- character(0)
+    navigatorschema <- 0
     
     
+    if(length(allimages) == 0){
+        #### SCHEMA 1 ####
+        REGEXvalidimages <- ".*([A-Z]{1,2})(\\d{1,2})(-(\\d{1,}))?_(t(\\d{1,}))?_?(z(\\d{1,}))?_?c?h?(\\d{2})?\\.tif$"
+        
+        # This matches the following:
+        # 
+        # "TileScan 1_A1-1_z0_ch00.tif"
+        # "TileScan 2_A1-1_t0_z0_ch00.tif"
+        # "TileScan 3_A1-1_z0_ch00.tif"
+        # "TileScan 4_A1_z0_ch00.tif"
+        # "TileScan 5_A1_ch00.tif"
+        # "TileScan 6_A1_t0_z0_ch00.tif"
+        # "TileScan 7_A1_t0_ch00.tif"
+        # "TileScan 1_A1-1_z0.tif"
+        # "A1-1_z0_ch00.tif"
+        # "A1-1_z0.tif"
+        
+        allimages <- list.files(sourcefolder, pattern = REGEXvalidimages, full.names = TRUE, recursive = TRUE)
+        navigatorschema <- 1
+    }
     
+    if(length(allimages) == 0){
+        #### SCHEMA 2 ####
+        REGEXvalidimages <- ".*([a-zA-Z0-9]{1,})_([A-Z]){1,}_(\\d{1,})_t(\\d{1,})_s(\\d{1,})(_ch(\\d\\d)){0,1}\\.tif$"
+        
+        # This matches the following:
+        # 
+        # "Mosaico xy_Mosaico_xy_B_3_t1_s03.tif"
+        # "Mosaico xy_Mosaico_xy_B_3_t0_s15_ch01.tif"
+
+        allimages <- list.files(sourcefolder, pattern = REGEXvalidimages, full.names = TRUE, recursive = TRUE)
+        navigatorschema <- 2
+    }
+    
+    if(length(allimages) == 0){
+        #### SCHEMA 3 ####
+        REGEXvalidimages <- ".*/([a-zA-Z]{1,})/([0-9]{1,})/([0-9]{1,})_t(\\d{1,})_s(\\d{1,})(_ch(\\d\\d)){0,1}\\.tif$"
+        
+        # This matches the following:
+        # 
+        # "C:/Mosaico_xy/C/3/3_t0_s00.tif"
+        # "C:/Mosaico_xy/C/3/3_t0_s00_ch00.tif"
+        
+        temp_allimages  <- list.files(sourcefolder, pattern = ".tif$", full.names = TRUE, recursive = TRUE)
+        allimages       <- temp_allimages[grepl(REGEXvalidimages, temp_allimages)]
+        navigatorschema <- 3
+    }
+    
+    if(length(allimages) == 0){
+        navigatorschema <- 0
+    }
+    
+    
+    if(navigatorschema == 0){
+        stop("Unknown Navigator tif export schema")
+    } else{
+        echo(paste0("Parsing Navigator images using Schema ", navigatorschema), printToGUI = printToGUI, printToConsole = printMessages)
+    }
+    
+    
+
     # Read raw image folder and store all filenames in a data.frame
-    REGEXvalidimages <- ".*([A-Z]{1,})(\\d{1,}).*_.*\\.tif$"
-    # This matches the following:
-    # 
-    # "TileScan 1_A1-1_z0_ch00.tif"
-    # "TileScan 2_A1-1_t0_z0_ch00.tif"
-    # "TileScan 3_A1-1_z0_ch00.tif"
-    # "TileScan 4_A1_z0_ch00.tif"
-    # "TileScan 5_A1_ch00.tif"
-    # "TileScan 6_A1_t0_z0_ch00.tif"
-    # "TileScan 7_A1_t0_ch00.tif"
-    # "TileScan 1_A1-1_z0.tif"
-    # "A1-1_z0_ch00.tif"
-    # "A1-1_z0.tif"
-    allimages <- list.files(sourcefolder, pattern = REGEXvalidimages, full.names = TRUE, recursive = TRUE)
-    
     renamer <- data.frame(oldname    = allimages,
                           newname    = character(length(allimages)),
                           coordAlpha = character(length(allimages)),
@@ -1259,48 +1309,47 @@ rename_leica_navigator <- function(sourcefolder, targetfolder, infilepath, compr
                           stringsAsFactors = FALSE)
     
     
-    
     # Fill data.frame
-    renamer$coordAlpha <- gsub(REGEXvalidimages, "\\1", basename(renamer$oldname))
-    renamer$coordNum   <- gsub(REGEXvalidimages, "\\2", basename(renamer$oldname))
+    if(navigatorschema == 1){
+        renamer$coordAlpha <- gsub(REGEXvalidimages, "\\1", basename(renamer$oldname))
+        renamer$coordNum   <- gsub(REGEXvalidimages, "\\2", basename(renamer$oldname))
+        renamer$posNum     <- gsub(REGEXvalidimages, "\\4", basename(renamer$oldname))
+        renamer$timeNum    <- gsub(REGEXvalidimages, "\\6", basename(renamer$oldname))
+        renamer$zNum       <- gsub(REGEXvalidimages, "\\8", basename(renamer$oldname))
+        renamer$channelNum <- gsub(REGEXvalidimages, "\\9", basename(renamer$oldname))
+    }
+    
+    if(navigatorschema == 2){
+        renamer$coordAlpha <- gsub(REGEXvalidimages, "\\2", basename(renamer$oldname))
+        renamer$coordNum   <- gsub(REGEXvalidimages, "\\3", basename(renamer$oldname))
+        renamer$posNum     <- gsub(REGEXvalidimages, "\\5", basename(renamer$oldname))
+        renamer$timeNum    <- gsub(REGEXvalidimages, "\\4", basename(renamer$oldname))
+        renamer$zNum       <- "000"         # Z-stacks not supported yet!
+        renamer$channelNum <- gsub(REGEXvalidimages, "\\7", basename(renamer$oldname))
+    }
+    
+    if(navigatorschema == 3){
+        renamer$coordAlpha <- gsub(REGEXvalidimages, "\\1", renamer$oldname)
+        renamer$coordNum   <- gsub(REGEXvalidimages, "\\2", renamer$oldname)
+        renamer$posNum     <- gsub(REGEXvalidimages, "\\5", renamer$oldname)
+        renamer$timeNum    <- gsub(REGEXvalidimages, "\\4", renamer$oldname)
+        renamer$zNum       <- "000"         # Z-stacks not supported yet!
+        renamer$channelNum <- gsub(REGEXvalidimages, "\\7", renamer$oldname)
+    }
+    
+    if(all(renamer$posNum == ""))     renamer$posNum <- 0
+    if(all(renamer$timeNum == ""))    renamer$timeNum <- 0
+    if(all(renamer$zNum == ""))       renamer$zNum <- 0
+    if(all(renamer$channelNum == "")) renamer$channelNum <- 0
+    
+    # Deal with missing information
     renamer$coordNum   <- formatC(as.integer(renamer$coordNum), width=2, flag="0")
+    renamer$posNum     <- formatC(as.integer(renamer$posNum), width=3, flag="0")
+    renamer$timeNum    <- formatC(as.integer(renamer$timeNum), width=4, flag="0")
+    renamer$zNum       <- formatC(as.integer(renamer$zNum), width=3, flag="0")
+    renamer$channelNum <- formatC(as.integer(renamer$channelNum), width=2, flag="0")
     
-    regexPos <- ".*[A-Z]{1,}\\d{1,}-(\\d{1,})_.*\\.tif$"
-    if(grepl(regexPos, allimages[1])){
-        temp           <- gsub(regexPos, "\\1", basename(renamer$oldname))
-        temp           <- as.integer(temp)
-        renamer$posNum <- formatC(temp, width=3, flag="0")
-    } else{
-        renamer$posNum <- "001"
-    }
     
-    regexTime <- ".*[A-Z]{1,}\\d{1,}.*_t(\\d{1,})_.*\\.tif$"
-    if(grepl(regexTime, allimages[1])){
-        temp            <- gsub(regexTime, "\\1", basename(renamer$oldname))
-        temp            <- as.integer(temp)
-        renamer$timeNum <- formatC(temp, width=4, flag="0")
-    } else{
-        renamer$timeNum <- "0000"
-    }
-    
-    regexZ <- ".*[A-Z]{1,}\\d{1,}.*_z(\\d{1,}).*\\.tif$"
-    if(grepl(regexZ, allimages[1])){
-        temp         <- gsub(regexZ, "\\1", basename(renamer$oldname))
-        temp         <- as.integer(temp)
-        renamer$zNum <- formatC(temp, width=3, flag="0")
-    } else{
-        renamer$zNum <- "000"
-    }
-    
-    regexChannel <- ".*[A-Z]{1,}\\d{1,}.*_.*ch(\\d{2,})\\.tif$"
-    if(grepl(regexChannel, allimages[1])){
-        temp               <- gsub(regexChannel, "\\1", basename(renamer$oldname))
-        temp               <- as.integer(temp)
-        renamer$channelNum <- formatC(temp, width=2, flag="0")
-    } else{
-        renamer$channelNum <- "00"
-    }
-
     renamer$newname    <- apply(renamer, 1, function(x){
         
         temp     <- which(infile.df$Row == x["coordAlpha"] & infile.df$Column == x["coordNum"])
@@ -1311,8 +1360,8 @@ rename_leica_navigator <- function(sourcefolder, targetfolder, infilepath, compr
         
         paste(targetsubfolder, wellpath, pospath, filename, sep = "/")
     })
-
     
+
     
     # Create target subfolder
     dir.create(targetsubfolder, showWarnings = FALSE, recursive = TRUE)

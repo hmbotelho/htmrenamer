@@ -82,6 +82,10 @@ The most common issues when installing htmrenamer are addressed in the [troubles
 3. **Install the htmrenamer package:** Open R. In the command line type
 
 	```
+	if (!require("BiocManager", quietly = TRUE))
+        install.packages("BiocManager")
+    BiocManager::install("RBioFormats")
+	
 	install.packages(c("gWidgets2", "gWidgets2tcltk", "openxlsx", "reshape2", "tiff", "XML"), dependencies=T)
 	install.packages("c:/path_to_file/htmrenamer_xxx.tar.gz", repos=NULL)
 	```

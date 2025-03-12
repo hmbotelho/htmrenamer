@@ -13,7 +13,7 @@ rename_leica_matrixscreener(
   outputDescriptors = TRUE,
   printMessages = TRUE,
   printFiles = TRUE,
-  printToGUI = TRUE
+  printToGUI = FALSE
 )
 }
 \arguments{
