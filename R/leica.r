@@ -700,7 +700,7 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
     # Data frame "FieldsAll": contains filename settings for each field
     FieldsAll                <- XML::xmlSApply(top[["ScanFieldArray"]], XML::xmlAttrs)
     FieldsAll                <- as.data.frame(t(FieldsAll), stringsAsFactors = FALSE)
-    class(FieldsAll$JobId)   <- "numeric"
+    class(FieldsAll$JobId)   <- "character"
     class(FieldsAll$SlideNo) <- "numeric"
     class(FieldsAll$WellX)   <- "numeric"
     class(FieldsAll$WellY)   <- "numeric"
