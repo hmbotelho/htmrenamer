@@ -766,12 +766,18 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
     # Embed imaging job data
     FieldsAll$HowManyChannels <- apply(FieldsAll, 1, function(x){
         JobNum <- as.character(x["JobId"])
+        if(!JobNum %in% names(ImagingSettings)){
+            stop(paste0("Error determining numer of channels JobID ", JobNum, " not among known jobs: ", paste(names(ImagingSettings), collapse=", ")))
+        }
         # Remove trailing and leading whitespaces
         JobNum <- gsub("^ ??(\\S*) ??$", "\\1", JobNum)
         if(!JobNum %in% names(ImagingSettings)) return("")
         ncol(ImagingSettings[[JobNum]][["Channels"]])})
     FieldsAll$ImagingJobOrder <- apply(FieldsAll, 1, function(x){
         JobNum <- as.character(x["JobId"])
+        if(!JobNum %in% names(ImagingSettings)){
+            stop(paste0("Error determining job order. JobID ", JobNum, " not among known jobs: ", paste(names(ImagingSettings), collapse=", ")))
+        }
         # Remove trailing and leading whitespaces
         JobNum <- gsub("^ ??(\\S*) ??$", "\\1", JobNum)
         if(JobNum           == "0" |
@@ -781,6 +787,9 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
         sum(x["IsDriftCompensationField"] == "true")})
     FieldsAll$HowManySections <- apply(FieldsAll, 1, function(x){
         JobNum <- as.character(x["JobId"])
+        if(!JobNum %in% names(ImagingSettings)){
+            stop(paste0("Error determining numer of sections. JobID ", JobNum, " not among known jobs: ", paste(names(ImagingSettings), collapse=", ")))
+        }
         # Remove trailing and leading whitespaces
         JobNum <- gsub("^ ??(\\S*) ??$", "\\1", JobNum)
         if(JobNum           == "0" |
@@ -790,6 +799,9 @@ rename_leica_matrixscreener <- function(sourcefolder, targetfolder, infilepath, 
         ImagingSettings[[JobNum]][["JobDescriptors"]]["Sections"]})
     FieldsAll$HowManyTimes    <- apply(FieldsAll, 1, function(x){
         JobNum <- as.character(x["JobId"])
+        if(!JobNum %in% names(ImagingSettings)){
+            stop(paste0("Error determining numer of time points JobID ", JobNum, " not among known jobs: ", paste(names(ImagingSettings), collapse=", ")))
+        }
         # Remove trailing and leading whitespaces
         JobNum <- gsub("^ ??(\\S*) ??$", "\\1", JobNum)
         if(JobNum           == "0" |
